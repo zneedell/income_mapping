@@ -7,11 +7,17 @@
   pointer-events: all;
 }
 
-path {
-  stroke: #000;
+.tract {
+  stroke: #777;
   stroke-linejoin: round;
   stroke-linecap: round;
   stroke-width: 0;
+}
+
+.tract:hover {
+  fill: orange;
+  stroke: #333;
+  stroke-width: 2;
 }
 
 #tracts .active {
@@ -27,72 +33,42 @@ path {
 }*/
 
 </style>
+<head>
+<title>Awesome Map!!!</title>
+</head>
 <body>
+
+<div class="container">
+      <div class="row">
+        <h3 class="nine columns">Boston metro area affordability map</h3>
+        <select id="select-key" class="three columns">
+          <option value="urban" selected="selected">Median Income</option>
+          <option value="agriculture">Median Rent</option>
+          <option value="forest">Median Home Value</option>
+          <option value="unproductive">% Rent Burdened</option>
+        </select>
+      </div>
+      <div id="map"><!-- Map container --></div>
+      <div id="legend"><!-- Legend container --></div>
+
+      <div id="details" class="hidden row"><!-- Details container --></div>
+      <div id="initial">
+        <h5>Instructions</h5>
+        <ul>
+          <li>Change the key using the dropdown above the map.</li>
+          <li>Select a municipality to show the details.</li>
+          <li>Scroll in the map to zoom in and out.</li>
+        </ul>
+      </div>
+      <div class="footer">
+        <strong>Data sources</strong>: Data from the Swiss Federal Statistical Office, both the <a href="http://www.bfs.admin.ch/bfs/portal/de/index/dienstleistungen/geostat/datenbeschreibung/generalisierte_gemeindegrenzen.html" target="_blank">geographical data</a> and the <a href="http://www.bfs.admin.ch/bfs/portal/de/index/regionen/02/daten.html" target="_blank">statistical data</a>.
+      </div>
+    </div>
+
 <script src="//d3js.org/d3.v4.min.js" charset="utf-8"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script src="//d3js.org/topojson.v2.min.js"></script>
-<script>
 
-var width = 960,
-    height = 600,
-    centered;
+<script src="map.js"></script>
 
-var path = d3.geoPath()
-    .projection(null);
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-var color = d3.scaleLinear()
-    .domain([0, 200])
-    .range(d3.schemeBlues[9]);
-
-var g = svg.append("g");
-
-
-d3.json("build/bgs.json", function(error, bgs) {
-  if (error) return console.error(error);
-
-g.append("g")
-    .attr("class", "tract")
-    .selectAll("path")
-    .data(topojson.feature(bgs, bgs.objects.bgs).features)
-    .enter().append("path")
-    .attr("d", path)
-    .style("fill", function(d) { 
-      if (d.properties.medianrent == null) {return color(0)}
-      else if (d.properties.meanincome == 0) {return "#cccccc"}
-        else {return color(d.properties.medianrent)}; })
-    .on("click", clicked)
-    .append("title")
-      .text(function(d) { return "Mean Income: " + d.properties.meanincome; });
-});
-
-
-function clicked(d) {
-  var x, y, k;
-
-  if (d && centered !== d) {
-    var centroid = path.centroid(d);
-    x = centroid[0];
-    y = centroid[1];
-    k = 3;
-    centered = d;
-  } else {
-    x = width / 2;
-    y = height / 2;
-    k = 1;
-    centered = null;
-  }
-
-  g.selectAll("path")
-      .classed("active", centered && function(d) { return d === centered; });
-
-  g.transition()
-      .duration(750)
-      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-      .style("stroke-width", 1 / k + "px");
-}
-
-</script>
+</body>
