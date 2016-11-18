@@ -11,28 +11,48 @@ var svg = d3.select("#map").append("svg")
     .attr("height", height);
 
 var color = d3.scaleQuantize()
-    .range(d3.schemeBlues[9])
-    .domain([0,250000]);
+    .range(d3.schemeBlues[9]);
 
 var g = svg.append("g");
 
 var currentKey = "meanincome";
 
+//var mapdata
+
 function getValueOfData(d) {
   return +d[currentKey];
 }
 
+function getMaxOfData(d) {
+  return d3.max(getValueOfData(d.properties));
+}
 
-d3.json("build/bgs.json", function(error, bgs) {
+function getMax(data, prop) {
+    var max = -10000000;
+    for (var i=0 ; i<data.length ; i++) {
+      if (!isNaN(parseInt(data[i]["properties"][prop]))) {
+        max = Math.max(parseInt(data[i]["properties"][prop]), max);
+      }
+    }
+    return max;
+}
+
+
+function updateMapColors(key) {
+  // Set the domain of the values (the minimum and maximum values of
+  // all values of the current key) to the quantize scale.
+  
+  d3.json("build/bgs.json", function(error, bgs) {
   if (error) return console.error(error);
-
-  // color.domain([
-  //     d3.min(bgs, function(d) { return getValueOfData(d); }),
-  //     d3.max(bgs, function(d) { return getValueOfData(d); })
-  //   ]);
-
-g.append("g")
+  color.domain([
+    0,
+    getMax(bgs.objects.bgs.geometries,key)
+  ]);
+  d3.select("g")
     .selectAll("path")
+    .remove();
+  // Update the class (determining the color) of the features.
+  g.selectAll("path")
     .attr("id","tracts")
     .data(topojson.feature(bgs, bgs.objects.bgs).features)
     .enter().append("path")
@@ -41,12 +61,37 @@ g.append("g")
     .style("fill", function(d) { 
       if (getValueOfData(d.properties) == null) {return "#222222"}
       else if (getValueOfData(d.properties) == 0) {return "#cccccc"}
-        else {return color(getValueOfData(d.properties) )}; })
+        else {return color(getValueOfData(d.properties) )};
+    })
     .on("click", clicked)
     .append("title")
-      .text(function(d) { return "Value: " + getValueOfData(d.properties); });
-});
+    .text(function(d) { return "Value: " + getValueOfData(d.properties) + ' ' + currentKey; })
+  ;})
 
+  d3.select("#legend")
+    .selectAll('ul')
+      .remove();
+    
+                    // build the map legend
+    var legend = d3.select('#legend')
+      .append('ul')
+      .attr('class', 'list-inline');
+    
+      var keys = legend.selectAll('li.key')
+        .data(color.range());
+    
+        var legend_items = [+color.domain[0], "", "", "", "", "", "", "", +color.domain[1]];
+    
+        keys.enter().append('li')
+          .attr('class', 'key')
+          .style('border-top-color', String)
+          .text(function (d, i) {
+             return legend_items[i];
+            });
+
+
+
+}
 
 function clicked(d) {
   var x, y, k;
@@ -72,3 +117,15 @@ function clicked(d) {
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
       .style("stroke-width", 1 / k + "px");
 }
+
+updateMapColors(currentKey);
+
+d3.select('#select-key').on('change', function(a) {
+  // Change the current key and call the function to update the colors.
+  currentKey = d3.select(this).property('value');
+  updateMapColors(currentKey);
+});
+
+
+
+

@@ -25,6 +25,24 @@
   stroke-width: 2;
 }
 
+        li.key {
+            float: left;
+            border-top-width: 15px;
+            border-top-style: solid;
+            font-family: "Oxygen";
+            color: #666;
+            font-size: 16px;
+            width: 10%;
+            padding-left: 0;
+            padding-right: 0;
+            list-style:none;
+        }
+        #legend {
+            width: 500px;
+            /*position: absolute;*/
+            left: 480px;
+            top: 425px;
+        }
 /*path {
   fill: none;
   stroke: #000;
@@ -39,18 +57,22 @@
 <body>
 
 <div class="container">
+
+      <div id="map"><!-- Map container -->
+        
       <div class="row">
         <h3 class="nine columns">Boston metro area affordability map</h3>
         <select id="select-key" class="three columns">
-          <option value="urban" selected="selected">Median Income</option>
-          <option value="agriculture">Median Rent</option>
+          <option value="meanincome" selected="selected">Mean Income</option>
+          <option value="medianrent">Median Rent</option>
           <option value="forest">Median Home Value</option>
           <option value="unproductive">% Rent Burdened</option>
         </select>
       </div>
-      <div id="map"><!-- Map container --></div>
-      <div id="legend"><!-- Legend container --></div>
 
+      </div>
+      <div id="legend"><!-- Legend container --></div>
+      <br>
       <div id="details" class="hidden row"><!-- Details container --></div>
       <div id="initial">
         <h5>Instructions</h5>
