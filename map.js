@@ -17,6 +17,8 @@ var g = svg.append("g");
 
 var currentKey = "meanincome";
 
+var maxvalue
+
 //var mapdata
 
 function getValueOfData(d) {
@@ -37,36 +39,67 @@ function getMax(data, prop) {
     return max;
 }
 
+var div = d3.select("body").append("div") 
+    .attr("class", "tooltip")       
+    .style("opacity", 0);
+
 
 function updateMapColors(key) {
   // Set the domain of the values (the minimum and maximum values of
   // all values of the current key) to the quantize scale.
-  
-  d3.json("build/bgs.json", function(error, bgs) {
-  if (error) return console.error(error);
-  color.domain([
-    0,
-    getMax(bgs.objects.bgs.geometries,key)
-  ]);
-  d3.select("g")
-    .selectAll("path")
-    .remove();
+  d3.queue()
+    .defer(d3.json,"build/bgs.json")
+    .defer(d3.json,"build/tracts.json")
+    .await(ready);
+
+  // d3.json("build/bgs.json", function(error, bgs) {
+  function ready(error,bgs,tracts) {
+    if (error) return console.error(error);
+    maxvalue = getMax(bgs.objects.bgs.geometries,key)
+
+    color.domain([
+      0,
+      maxvalue
+    ]);
+
+
+
+    d3.select("g")
+      .selectAll("path")
+      .remove();
   // Update the class (determining the color) of the features.
-  g.selectAll("path")
-    .attr("id","tracts")
-    .data(topojson.feature(bgs, bgs.objects.bgs).features)
-    .enter().append("path")
-    .attr("class", "tract")
-    .attr("d", path)
-    .style("fill", function(d) { 
-      if (getValueOfData(d.properties) == null) {return "#222222"}
-      else if (getValueOfData(d.properties) == 0) {return "#cccccc"}
-        else {return color(getValueOfData(d.properties) )};
-    })
-    .on("click", clicked)
-    .append("title")
-    .text(function(d) { return "Value: " + getValueOfData(d.properties) + ' ' + currentKey; })
-  ;})
+      g.selectAll("path")
+        .attr("id","censusblocks")
+        .data(topojson.feature(bgs, bgs.objects.bgs).features)
+        .enter().append("path")
+        .attr("class", "censusblock")
+        .attr("d", path)
+        .style("fill", function(d) { 
+        if (getValueOfData(d.properties) == null) {return "#222222"}
+          else if (getValueOfData(d.properties) == 0) {return color(0)}
+          else {return color(getValueOfData(d.properties) )};
+        })
+        .on("click", clicked)
+        .append("title")
+        .text(function(d) { return "Value: " + getValueOfData(d.properties) + ' ' + currentKey; })
+        .on("mouseover", function(d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .9);
+          div.html(
+            '<a href= "http://google.com">' + // The first <a> tag
+              'aaaaah' +
+                "</a>" +                          // closing </a> tag
+                "<br/>" + "bbbbb")     
+            .style("left", (d3.event.pageX) + "px")             
+            .style("top", (d3.event.pageY - 28) + "px");
+       });
+
+    g.append("path")
+      .datum(topojson.mesh(tracts))
+      .attr("class", "censustracts")
+      .attr("d", path);
+  ;}
 
   d3.select("#legend")
     .selectAll('ul')
@@ -80,7 +113,7 @@ function updateMapColors(key) {
       var keys = legend.selectAll('li.key')
         .data(color.range());
     
-        var legend_items = [+color.domain[0], "", "", "", "", "", "", "", +color.domain[1]];
+        var legend_items = [0, "", "", "", "", "", "", "", +maxvalue];
     
         keys.enter().append('li')
           .attr('class', 'key')
@@ -88,8 +121,6 @@ function updateMapColors(key) {
           .text(function (d, i) {
              return legend_items[i];
             });
-
-
 
 }
 
