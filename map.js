@@ -39,6 +39,16 @@ function getMax(data, prop) {
     return max;
 }
 
+function getMin(data, prop) {
+    var min = 10000000;
+    for (var i=0 ; i<data.length ; i++) {
+      if (!isNaN(parseInt(data[i]["properties"][prop]))) {
+        min = Math.min(parseInt(data[i]["properties"][prop]), min);
+      }
+    }
+    return min;
+}
+
 var div = d3.select("body").append("div") 
     .attr("class", "tooltip")       
     .style("opacity", 0);
@@ -55,10 +65,11 @@ function updateMapColors(key) {
   // d3.json("build/bgs.json", function(error, bgs) {
   function ready(error,tracts) {
     if (error) return console.error(error);
+    minvalue = getMin(tracts.objects.tracts.geometries,key)
     maxvalue = getMax(tracts.objects.tracts.geometries,key)
 
     color.domain([
-      0,
+      minvalue,
       maxvalue
     ]);
 
@@ -77,7 +88,8 @@ function updateMapColors(key) {
         .style("fill", function(d) { 
         if (getValueOfData(d.properties) == null) {return "#222222"}
           else if (getValueOfData(d.properties) == 0) {return color(0)}
-          else {return color(getValueOfData(d.properties) )};
+          // else {return color(getValueOfData(d.properties) )};
+          else {return color(+d.properties[currentKey] )};
         })
         .on("click", clicked)
         .append("title")
