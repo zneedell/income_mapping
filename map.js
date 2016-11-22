@@ -48,14 +48,14 @@ function updateMapColors(key) {
   // Set the domain of the values (the minimum and maximum values of
   // all values of the current key) to the quantize scale.
   d3.queue()
-    .defer(d3.json,"build/bgs.json")
+    // .defer(d3.json,"build/bgs.json")
     .defer(d3.json,"build/tracts.json")
     .await(ready);
 
   // d3.json("build/bgs.json", function(error, bgs) {
-  function ready(error,bgs,tracts) {
+  function ready(error,tracts) {
     if (error) return console.error(error);
-    maxvalue = getMax(bgs.objects.bgs.geometries,key)
+    maxvalue = getMax(tracts.objects.tracts.geometries,key)
 
     color.domain([
       0,
@@ -69,10 +69,10 @@ function updateMapColors(key) {
       .remove();
   // Update the class (determining the color) of the features.
       g.selectAll("path")
-        .attr("id","censusblocks")
-        .data(topojson.feature(bgs, bgs.objects.bgs).features)
+        .attr("id","censustracts")
+        .data(topojson.feature(tracts, tracts.objects.tracts).features)
         .enter().append("path")
-        .attr("class", "censusblock")
+        .attr("class", "censustract")
         .attr("d", path)
         .style("fill", function(d) { 
         if (getValueOfData(d.properties) == null) {return "#222222"}
