@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8 />
+	<title>Census Tract Changes 2000 - 2010</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+	<script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css' rel='stylesheet' />
+	<link href='site.css' rel='stylesheet' />
+</head>
+<body>
+<script src='ext/jquery.js'></script>
+<script src='ext/underscore.js'></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+
+<div id='banner'>
+	<img class='il' src='img/illinois-icon.png'></img>
+	<h3>Illinois Census Tract Changes</h3>
+	<div class='switcher'><a class='active' type='sig'>Significantly Changed</a><a class='all'type='all'>All</a>
+	</div>
+	<span class='icon about' style='background-image: url(img/glyphs/glyphicons_194_circle_question_mark.png);'></span> 
+</div>
+<div id='about' class='active'>
+	<p><strong>Fork Your State on <a href='https://github.com/developmentseed/census-tracts'>GitHub</a>.</strong></p>
+	<small>The map shows differences between 2000 and 2010 census tracts in Illinois. Hover over 2010 tracts, outlined in blue, to see the 2000 tracts that were merged, revised or split to make up new tracts.</small>
+	<small>Data from <a href='https://www.census.gov/geo/maps-data/data/tract_rel_overview.html'>Census</a></small>.
+	<div class='legend'>
+		<li><span class='ten'></span>2010 Tracts</li>
+		<li><span class='two'></span>2000 Tracts</span></li>
+	</div>
+</div>
+<div id='map'></div>
+<script src='script.js'></script>
+</body>
+</html>
