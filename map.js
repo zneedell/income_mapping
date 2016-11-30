@@ -10,9 +10,6 @@ var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-var color = d3.scaleQuantize()
-    .range(d3.schemeBlues[9]);
-
 var g = svg.append("g");
 
 var currentKey = "meanincome";
@@ -57,6 +54,15 @@ var div = d3.select("body").append("div")
 function updateMapColors(key) {
   // Set the domain of the values (the minimum and maximum values of
   // all values of the current key) to the quantize scale.
+
+  var color = d3.scaleQuantize()
+    .range(d3.schemeBlues[9]);
+
+  d3.select(".container")
+    // .select(".legend")
+    .selectAll("ul")
+      .remove();
+
   d3.queue()
     // .defer(d3.json,"build/bgs.json")
     .defer(d3.json,"build/tracts.json")
@@ -65,13 +71,6 @@ function updateMapColors(key) {
   // d3.json("build/bgs.json", function(error, bgs) {
   function ready(error,tracts) {
     if (error) return console.error(error);
-    minvalue = getMin(tracts.objects.tracts.geometries,key)
-    maxvalue = getMax(tracts.objects.tracts.geometries,key)
-
-    color.domain([
-      minvalue,
-      maxvalue
-    ]);
 
 
 
@@ -84,7 +83,15 @@ function updateMapColors(key) {
         .data(topojson.feature(tracts, tracts.objects.tracts).features)
         .enter().append("path")
         .attr("class", "censustract")
-        .attr("d", path)
+        .attr("d", path);
+            minvalue = getMin(tracts.objects.tracts.geometries,key)
+            maxvalue = getMax(tracts.objects.tracts.geometries,key)
+
+            color.domain([
+              minvalue,
+              maxvalue
+            ]);
+      g.selectAll("path")
         .style("fill", function(d) { 
         if (getValueOfData(d.properties) == null) {return "#222222"}
           else if (getValueOfData(d.properties) == 0) {return color(0)}
@@ -93,7 +100,7 @@ function updateMapColors(key) {
         })
         .on("click", clicked)
         .append("title")
-        .text(function(d) { return "Value: " + getValueOfData(d.properties) + ' ' + currentKey; })
+        .text(function(d) { return "Value: " + color.range + ' ' + currentKey; })
         .on("mouseover", function(d) {
           div.transition()
             .duration(200)
@@ -113,9 +120,7 @@ function updateMapColors(key) {
       .attr("d", path);
   ;}
 
-  d3.select("#legend")
-    .selectAll('ul')
-      .remove();
+
     
                     // build the map legend
     var legend = d3.select('#legend')
@@ -125,7 +130,7 @@ function updateMapColors(key) {
       var keys = legend.selectAll('li.key')
         .data(color.range());
     
-        var legend_items = [0, "", "", "", "", "", "", "", +maxvalue];
+        var legend_items = [+minvalue, "", "", "", "", "", "", "", +maxvalue];
     
         keys.enter().append('li')
           .attr('class', 'key')
@@ -161,8 +166,6 @@ function clicked(d) {
       .style("stroke-width", 1 / k + "px");
 }
 
-updateMapColors(currentKey);
-
 d3.select('#select-key').on('change', function(a) {
   // Change the current key and call the function to update the colors.
   currentKey = d3.select(this).property('value');
@@ -170,5 +173,7 @@ d3.select('#select-key').on('change', function(a) {
 });
 
 
+
+updateMapColors(currentKey);
 
 
