@@ -6,15 +6,24 @@ var width = 960,
 var path = d3.geoPath()
     .projection(null);
 
+var albersProjection = d3.geoAlbers()
+  .scale( 170000 )
+  .rotate( [71.13,0]  )
+  .center( [0, 42.35]  )
+  .translate( [width/2,height/2] );
+var geoPath = d3.geoPath()
+    .projection( albersProjection );
+
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height);
 
 var g = svg.append("g");
 
-var currentKey = "meanincome";
+var currentKey = "households_2009";
 
-var maxvalue
+var maxvalue,
+  minvalue
 
 //var mapdata
 
@@ -50,30 +59,55 @@ var div = d3.select("body").append("div")
     .attr("class", "tooltip")       
     .style("opacity", 0);
 
+var color = d3.scaleQuantize()
+    .range(d3.schemeBlues[9])
+    .domain([0,1])
 
-function updateMapColors(key) {
+
   // Set the domain of the values (the minimum and maximum values of
   // all values of the current key) to the quantize scale.
 
-  var color = d3.scaleQuantize()
-    .range(d3.schemeBlues[9]);
 
-  d3.select(".container")
-    // .select(".legend")
-    .selectAll("ul")
-      .remove();
+
 
   d3.queue()
-    // .defer(d3.json,"build/bgs.json")
-    .defer(d3.json,"build/tracts.json")
+    .defer(d3.json,"build/counties.json")
+    .defer(d3.json,"build/tract2.json")
     .await(ready);
 
   // d3.json("build/bgs.json", function(error, bgs) {
-  function ready(error,tracts) {
+  function ready(error,counties,tracts) {
     if (error) return console.error(error);
+    
 
+    function updateColors(key){
+      minvalue = getMin(tracts.objects.tracts.geometries,key)
+      maxvalue = getMax(tracts.objects.tracts.geometries,key)
 
+      color.domain = [
+        minvalue,
+        maxvalue
+      ];
+      d3.select(".container")
+        .selectAll("ul")
+        .remove();
+      var legend = d3.select('#legend')
+        .append('ul')
+        .attr('class', 'list-inline');
+         var keys = legend.selectAll('li.key')
+          .data(color.range());
+          var legend_items = [+minvalue, "", "", "", "", "", "", "", +maxvalue];
+          keys.enter().append('li')
+            .attr('class', 'key')
+            .style('border-top-color', String)
+            .text(function (d, i) {
+             return legend_items[i];
+              });
+      return color
+    }
 
+    function updateMap(key) {
+    updateColors(key)
     d3.select("g")
       .selectAll("path")
       .remove();
@@ -84,23 +118,17 @@ function updateMapColors(key) {
         .enter().append("path")
         .attr("class", "censustract")
         .attr("d", path);
-            minvalue = getMin(tracts.objects.tracts.geometries,key)
-            maxvalue = getMax(tracts.objects.tracts.geometries,key)
 
-            color.domain([
-              minvalue,
-              maxvalue
-            ]);
       g.selectAll("path")
         .style("fill", function(d) { 
-        if (getValueOfData(d.properties) == null) {return "#222222"}
+        if (d.properties[currentKey] == null) {return "#222222"}
           else if (getValueOfData(d.properties) == 0) {return color(0)}
           // else {return color(getValueOfData(d.properties) )};
           else {return color(+d.properties[currentKey] )};
         })
         .on("click", clicked)
         .append("title")
-        .text(function(d) { return "Value: " + color.range + ' ' + currentKey; })
+        .text(function(d) { return "Value: " + d.properties[currentKey]  + ' ' + currentKey; })
         .on("mouseover", function(d) {
           div.transition()
             .duration(200)
@@ -113,32 +141,27 @@ function updateMapColors(key) {
             .style("left", (d3.event.pageX) + "px")             
             .style("top", (d3.event.pageY - 28) + "px");
        });
-
-    g.append("path")
-      .datum(topojson.mesh(tracts))
-      .attr("class", "censustracts")
-      .attr("d", path);
+    // console.log(towns.features[1].geometry)
+    // g.append("path")
+    //   .datum(topojson.mesh(counties))
+    //   // .data(topojson.mesh(towns.features[1].geometry))
+    //   .attr("class", "town")
+      // .attr( "d", path );
   ;}
 
 
     
                     // build the map legend
-    var legend = d3.select('#legend')
-      .append('ul')
-      .attr('class', 'list-inline');
-    
-      var keys = legend.selectAll('li.key')
-        .data(color.range());
-    
-        var legend_items = [+minvalue, "", "", "", "", "", "", "", +maxvalue];
-    
-        keys.enter().append('li')
-          .attr('class', 'key')
-          .style('border-top-color', String)
-          .text(function (d, i) {
-             return legend_items[i];
-            });
 
+
+  d3.select('#select-key').on('change', function(a) {
+  // Change the current key and call the function to update the colors.
+    currentKey = d3.select(this).property('value');
+    updateMap(currentKey);
+    })
+
+  // updateColors(currentKey)
+  updateMap(currentKey);
 }
 
 function clicked(d) {
@@ -166,14 +189,8 @@ function clicked(d) {
       .style("stroke-width", 1 / k + "px");
 }
 
-d3.select('#select-key').on('change', function(a) {
-  // Change the current key and call the function to update the colors.
-  currentKey = d3.select(this).property('value');
-  updateMapColors(currentKey);
-});
 
 
 
-updateMapColors(currentKey);
 
 
