@@ -49,6 +49,18 @@ build/county.json: build/tl_2015_us_county.shp
 		--simplify=.95 \
 		-- counties=$<
 
+build/town.json: build/TOWNSSURVEY_POLYM.shp
+	node_modules/.bin/topojson \
+		-o $@ \
+		--id-property='TOWNID' \
+		--projection='width = 960, height = 600, d3.geo.albers() \
+  			.scale( 170000 ) \
+  			.rotate( [71.13,0] ) \
+  			.center( [0, 42.35] ) \
+  			.translate( [width/2,height/2] );' \
+		--simplify=.99 \
+		-- towns=$<
+
 build/tracts.json: build/tl_2015_25_tract.shp build/aff/ACS_2010_Combined.csv
 	node_modules/.bin/topojson \
 		-o $@ \
