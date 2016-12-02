@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <style>
 
-div.tooltip {
+/*div.tooltip {
   position: absolute;
   text-align: center;
   width: 60px;
@@ -14,7 +14,6 @@ div.tooltip {
   border-radius: 8px;
 }
 
-
 .background {
   fill: none;
   pointer-events: all;
@@ -24,23 +23,42 @@ div.tooltip {
   stroke: #777;
   stroke-linejoin: round;
   stroke-linecap: round;
-  stroke-width: 0;
+  pointer-events: all;
 }
 
 .tract:hover {
   fill: orange;
   stroke: #333;
   stroke-width: 2;
+}*/
+
+.scatterplot {
+
+    stroke-width: 0.5;
+    stroke: blue;
 }
 
-.censustracts {
+.selected {
+  fill: orange !important;
+  stroke: black;
+  stroke-width: 2;
+}
+
+.neighborhood {
+  pointer-events: none;
+}
+
+.censustract {
   fill: none;
   stroke: #aaa;
+  stroke-width: 0;
   stroke-linejoin: round;
+  pointer-events: all;
+  shape-rendering: crispEdges;
 }
 
 #tracts .active {
-  fill: orange;
+  fill: green;
   stroke-width: 2;
 }
 
@@ -71,16 +89,23 @@ div.tooltip {
 
 </style>
 <head>
-<title>Awesome Map!!!</title>
+<title>Boston Metro Housing Mapping</title>
+<link rel="stylesheet" href="css/main.css" />
+<!-- <link href="css/style.css" rel="stylesheet" type="text/css"> -->
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" type="text/css"> -->
+<script src="neighborhoods_mod.js"></script>
+<script src="https://unpkg.com/topojson@2"></script>
 </head>
 <body>
 
-<div class="container">
 
+<div class="container">
+<!-- <h2 class="nine columns">Boston metro area affordability map</h3> -->
       <div id="map"><!-- Map container -->
         
       <div class="row">
-        <h3 class="nine columns">Boston metro area affordability map</h3>
+        <h1 class="eleven columns">Boston metro area affordability map</h1>
+        <br>
         <select id="select-key" class="three columns">
           <option value="median_income_2009">Median Income 2009</option>
           <option value="median_income_2014" selected="selected">Median Income 2014</option>
@@ -88,8 +113,19 @@ div.tooltip {
           <option value="households_2014">Households 2014</option>
           <option value="median_rent_2009">Median Rent 2009</option>
           <option value="median_rent_2014">Median Rent 2014</option>
+          <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
+          <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
+          <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
+          <option value="perc_rentBurdened_2014">Percent Rent Burdened 2014</option>
+          <option value="perc_unitsOwned_2009">Percent of Units Owned 2009 </option>
+          <option value="perc_unitsOwned_2014">Percent of Units Owned 2014 </option>
           <option value="median_rent_Change">Median Rent Change</option>
           <option value="median_inc_Change">Median Income Change</option>
+          <option value="median_perc_rent_Change">Median % Rent Change</option>
+          <option value="median_perc_inc_Change">Median % Income Change</option>
+          <option value="perc_nonWhite_Change">Percent Non-White Change</option>
+          <option value="perc_displaced">Percent Displaced</option>
+          <option value="perc_arrival">Percent New Arrivals</option>
         </select>
       </div>
 
@@ -97,21 +133,70 @@ div.tooltip {
       <div id="legend"><!-- Legend container --></div>
       <br>
       <div id="details" class="hidden row"><!-- Details container --></div>
-      <div id="initial">
-        <h5>Instructions</h5>
-        <ul>
-          <li>Change the key using the dropdown above the map.</li>
-          <li>Select a municipality to show the details.</li>
-          <li>Scroll in the map to zoom in and out.</li>
-        </ul>
+      <div class="row">
+        <h4 class="nine columns">Census Block Comparisons</h3>
+        <br>
+        <div class="row">
+        <h5> X value: </h5>
+        <select id="select-key-x" class="three columns">
+          <option value="median_income_2009" selected="selected">Median Income 2009</option>
+          <option value="median_income_2014">Median Income 2014</option>
+          <option value="households_2009">Households 2009</option>
+          <option value="households_2014">Households 2014</option>
+          <option value="median_rent_2009">Median Rent 2009</option>
+          <option value="median_rent_2014">Median Rent 2014</option>
+          <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
+          <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
+          <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
+          <option value="perc_rentBurdened_2014">Percent Rent Burdened 2014</option>
+          <option value="perc_unitsOwned_2009">Percent of Units Owned 2009 </option>
+          <option value="perc_unitsOwned_2014">Percent of Units Owned 2014 </option>
+          <option value="median_rent_Change">Median Rent Change</option>
+          <option value="median_inc_Change">Median Income Change</option>
+          <option value="perc_nonWhite_Change">Percent Non-White Change</option>
+          <option value="perc_displaced">Percent Displaced</option>
+          <option value="perc_arrival">Percent New Arrivals</option>
+        </select>
+        </div>
+<!--         <br> -->
+        <div class="row">
+        <h5> Y value: </h5>
+        <select id="select-key-y" class="three columns">
+          <option value="median_income_2009">Median Income 2009</option>
+          <option value="median_income_2014" selected="selected">Median Income 2014</option>
+          <option value="households_2009">Households 2009</option>
+          <option value="households_2014">Households 2014</option>
+          <option value="median_rent_2009">Median Rent 2009</option>
+          <option value="median_rent_2014">Median Rent 2014</option>
+          <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
+          <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
+          <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
+          <option value="perc_rentBurdened_2014">Percent Rent Burdened 2014</option>
+          <option value="perc_unitsOwned_2009">Percent of Units Owned 2009 </option>
+          <option value="perc_unitsOwned_2014">Percent of Units Owned 2014 </option>
+          <option value="median_rent_Change">Median Rent Change</option>
+          <option value="median_inc_Change">Median Income Change</option>
+          <option value="perc_nonWhite_Change">Percent Non-White Change</option>
+          <option value="perc_displaced">Percent Displaced</option>
+          <option value="perc_arrival">Percent New Arrivals</option>
+        </select>
+        </div>
+        <div id="chart"><!-- Chart container --></div>
       </div>
-      <div class="footer">
-        <strong>Data sources</strong>: Data from the Swiss Federal Statistical Office, both the <a href="http://www.bfs.admin.ch/bfs/portal/de/index/dienstleistungen/geostat/datenbeschreibung/generalisierte_gemeindegrenzen.html" target="_blank">geographical data</a> and the <a href="http://www.bfs.admin.ch/bfs/portal/de/index/regionen/02/daten.html" target="_blank">statistical data</a>.
-      </div>
-    </div>
+      
+      <footer id="footer">
+        <div class="inner">
+          <ul class="actions">
+            <li><span class="icon fa-envelope"></span> <a href="#">zneedell@gmail.com</a></li>
+          </ul>
+        </div>
+        <div class="copyright">
+          Design from <a href="https://templated.co">TEMPLATED</a>. Images <a href="https://unsplash.com">Style: Unsplash</a>.
+        </div>
+      </footer>
 
 <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
+<!-- <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script> -->
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script src="https://d3js.org/topojson.v2.min.js"></script>
 <!-- <script src="d3-tip.js"></script>

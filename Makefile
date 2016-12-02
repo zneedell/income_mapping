@@ -75,8 +75,6 @@ build/tracts.json: build/tl_2015_25_tract.shp build/aff/ACS_2010_Combined.csv
 		--properties='medianIncome_2014=+d.properties["IncMedian_2014"]' \
 		--properties='medianRent_2009=+d.properties["MedianRent_2009"]' \
 		--properties='medianRent_2014=+d.properties["MedianRent_2014"]' \
-		--properties='medianRent_Change=+d.properties["MedianRent_Change"]' \
-		--properties='medianIncome_Change=+d.properties["IncMedian_Change"]' \
 		--projection='width = 960, height = 600, d3.geo.albers() \
   			.scale( 170000 ) \
   			.rotate( [71.13,0] ) \
@@ -109,16 +107,16 @@ build/tract2.json: build/tl_2015_25_tract.shp build/aff/ACS_Map_Data.csv
 		--properties='median_income_2014=+d.properties["IncMedian_2014"]' \
 		--properties='median_rent_2009=+d.properties["MedianRent_2009"]' \
 		--properties='median_rent_2014=+d.properties["MedianRent_2014"]' \
-		--properties='perc_unitsOwned_2009=+d.properties["perc_UnitsOwned_2009"]' \
-		--properties='perc_unitsOwned_2014=+d.properties["perc_UnitsOwned_2014"]' \
+		--properties='perc_unitsOwned_2009=+d.properties["Perc_UnitsOwned_2009"]' \
+		--properties='perc_unitsOwned_2014=+d.properties["Perc_UnitsOwned_2009"]' \
 		--properties='median_rent_Change=+d.properties["RentMedianAbsChange"]' \
 		--properties='median_perc_rent_Change=+d.properties["RentMedianPercChange"]' \
 		--properties='median_inc_Change=+d.properties["IncMedianAbsChange"]' \
 		--properties='median_perc_inc_Change=+d.properties["IncMedianPercChange"]' \
-		--properties='displaced_Change=+d.properties["Displaced_2014"]' \
-		--properties='arrival_Change=+d.properties["NewArrival_2014"]' \
-		--properties='perc_displaced_Change=+d.properties["Perc_Displaced"]' \
-		--properties='perc_arrival_Change=+d.properties["Perc_NewArrival"]' \
+		--properties='displaced=+d.properties["Displaced_2014"]' \
+		--properties='arrival=+d.properties["NewArrival_2014"]' \
+		--properties='perc_displaced=+d.properties["Perc_Displaced"]' \
+		--properties='perc_arrival=+d.properties["Perc_NewArrival"]' \
 		--projection='width = 960, height = 600, d3.geo.albers() \
   			.scale( 170000 ) \
   			.rotate( [71.13,0] ) \
