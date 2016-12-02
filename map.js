@@ -370,7 +370,7 @@ var neighborhoods_boston = svg.append( "g" ).attr( "id", "neighborhoodsBOS" );
 //   .attr("d", path);
 neighborhoods_boston.selectAll( "path" )
   
-  .data( js/neighborhoods_boston_json.features )
+  .data( neighborhoods_boston_json.features )
   .enter()
   .append( "path" )
   .attr( "d", geoPath )
@@ -402,8 +402,8 @@ neighborhoods_cambridge.selectAll( "path" )
     return "Neighborhood: " +
       d.properties.NAME
      });
-console.log(neighborhoods_boston_json)
-console.log(neighborhoods_cambridge_json)
+// console.log(neighborhoods_boston_json)
+// console.log(neighborhoods_cambridge_json)
 
 
 
