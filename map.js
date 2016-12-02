@@ -55,39 +55,27 @@ function getMin(data, prop) {
     return min;
 }
 
-var div = d3.select("body").append("div") 
-    .attr("class", "tooltip")       
-    .style("opacity", 0);
-
-var color = d3.scaleQuantize()
-    .range(d3.schemeBlues[9])
-    .domain([0,1])
-
-
-  // Set the domain of the values (the minimum and maximum values of
-  // all values of the current key) to the quantize scale.
-
-
-
 
   d3.queue()
-    .defer(d3.json,"build/counties.json")
+    // .defer(d3.json,"build/counties.json")
     .defer(d3.json,"build/tract2.json")
     .await(ready);
 
   // d3.json("build/bgs.json", function(error, bgs) {
-  function ready(error,counties,tracts) {
+  function ready(error,tracts) {
     if (error) return console.error(error);
-    
+
+    var color = d3.scaleQuantize()
+      .range(d3.schemeGreens[9])
 
     function updateColors(key){
       minvalue = getMin(tracts.objects.tracts.geometries,key)
       maxvalue = getMax(tracts.objects.tracts.geometries,key)
 
-      color.domain = [
+      color.domain([
         minvalue,
         maxvalue
-      ];
+      ]);
       d3.select(".container")
         .selectAll("ul")
         .remove();
@@ -107,7 +95,11 @@ var color = d3.scaleQuantize()
     }
 
     function updateMap(key) {
+    console.log(color.domain)
     updateColors(key)
+    console.log(color.domain)
+    console.log("done updating colors")
+    console.log(color(1200))
     d3.select("g")
       .selectAll("path")
       .remove();
@@ -117,12 +109,10 @@ var color = d3.scaleQuantize()
         .data(topojson.feature(tracts, tracts.objects.tracts).features)
         .enter().append("path")
         .attr("class", "censustract")
-        .attr("d", path);
-
-      g.selectAll("path")
+        .attr("d", path)
         .style("fill", function(d) { 
-        if (d.properties[currentKey] == null) {return "#222222"}
-          else if (getValueOfData(d.properties) == 0) {return color(0)}
+        if (d.properties.perc_water > 0.5) {return "blue"}
+          else if (d.properties[currentKey] == null) {return "grey"}
           // else {return color(getValueOfData(d.properties) )};
           else {return color(+d.properties[currentKey] )};
         })
@@ -149,19 +139,17 @@ var color = d3.scaleQuantize()
       // .attr( "d", path );
   ;}
 
-
-    
-                    // build the map legend
-
-
   d3.select('#select-key').on('change', function(a) {
   // Change the current key and call the function to update the colors.
     currentKey = d3.select(this).property('value');
     updateMap(currentKey);
+    console.log("Done calling update map")
     })
 
   // updateColors(currentKey)
   updateMap(currentKey);
+  console.log("first map update")
+  return color
 }
 
 function clicked(d) {

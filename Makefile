@@ -91,8 +91,13 @@ build/tract2.json: build/tl_2015_25_tract.shp build/aff/ACS_Map_Data.csv
 		--id-property='GEOID,GEOid2' \
 		--external-properties=build/aff/ACS_Map_Data.csv \
 		--properties='name=Geography' \
+		--properties='areaLand=+d.properties["areaLand"]' \
+		--properties='perc_water=+d.properties["Perc_Water"]' \
 		--properties='households_2009=+d.properties["HousingUnits_2009"]' \
 		--properties='households_2014=+d.properties["HousingUnits_2014"]' \
+		--properties='popDen_2009=+d.properties["PopDen_2009"]' \
+		--properties='popDen_2014=+d.properties["PopDen_2014"]' \
+		--properties='popDen_Change=+d.properties["PopDen_Change"]' \
 		--properties='population_2009=+d.properties["Pop_2009"]' \
 		--properties='population_2014=+d.properties["Pop_2014"]' \
 		--properties='perc_nonWhite_2009=+d.properties["Perc_NonWhite_2009"]' \
