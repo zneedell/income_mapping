@@ -1,0 +1,23 @@
+GEO.id,Id
+GEO.id2,Id2
+GEO.display-label,Geography
+HD01_VD02,Estimate; Median gross rent -- - Total:
+HD02_VD02,Margin of Error; Median gross rent -- - Total:
+HD01_VD03,Estimate; Median gross rent -- - Total: - Built 2010 or later
+HD02_VD03,Margin of Error; Median gross rent -- - Total: - Built 2010 or later
+HD01_VD04,Estimate; Median gross rent -- - Total: - Built 2000 to 2009
+HD02_VD04,Margin of Error; Median gross rent -- - Total: - Built 2000 to 2009
+HD01_VD05,Estimate; Median gross rent -- - Total: - Built 1990 to 1999
+HD02_VD05,Margin of Error; Median gross rent -- - Total: - Built 1990 to 1999
+HD01_VD06,Estimate; Median gross rent -- - Total: - Built 1980 to 1989
+HD02_VD06,Margin of Error; Median gross rent -- - Total: - Built 1980 to 1989
+HD01_VD07,Estimate; Median gross rent -- - Total: - Built 1970 to 1979
+HD02_VD07,Margin of Error; Median gross rent -- - Total: - Built 1970 to 1979
+HD01_VD08,Estimate; Median gross rent -- - Total: - Built 1960 to 1969
+HD02_VD08,Margin of Error; Median gross rent -- - Total: - Built 1960 to 1969
+HD01_VD09,Estimate; Median gross rent -- - Total: - Built 1950 to 1959
+HD02_VD09,Margin of Error; Median gross rent -- - Total: - Built 1950 to 1959
+HD01_VD10,Estimate; Median gross rent -- - Total: - Built 1940 to 1949
+HD02_VD10,Margin of Error; Median gross rent -- - Total: - Built 1940 to 1949
+HD01_VD11,Estimate; Median gross rent -- - Total: - Built 1939 or earlier
+HD02_VD11,Margin of Error; Median gross rent -- - Total: - Built 1939 or earlier

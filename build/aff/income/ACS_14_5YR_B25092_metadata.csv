@@ -1,0 +1,9 @@
+GEO.id,Id
+GEO.id2,Id2
+GEO.display-label,Geography
+HD01_VD02,Estimate; Median selected monthly owner costs as a percentage of household income in the past 12 months -- - Total:
+HD02_VD02,Margin of Error; Median selected monthly owner costs as a percentage of household income in the past 12 months -- - Total:
+HD01_VD03,Estimate; Median selected monthly owner costs as a percentage of household income in the past 12 months -- - Housing units with a mortgage
+HD02_VD03,Margin of Error; Median selected monthly owner costs as a percentage of household income in the past 12 months -- - Housing units with a mortgage
+HD01_VD04,Estimate; Median selected monthly owner costs as a percentage of household income in the past 12 months -- - Housing units without a mortgage
+HD02_VD04,Margin of Error; Median selected monthly owner costs as a percentage of household income in the past 12 months -- - Housing units without a mortgage
