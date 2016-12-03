@@ -173,6 +173,8 @@ var activeColorDomain;
       .style("stroke", "red")    // set the line colour
       .style("fill", "none")
         .attr( "d", path )
+        .attr("transform", function(d) {
+           return "translate(-100,-50)"})
         .append("title")
           .text(function(d) {
             d.Count = 0;

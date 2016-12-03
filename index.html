@@ -32,6 +32,13 @@
   stroke-width: 2;
 }*/
 
+.label {
+  font-size: 60%;
+}
+.cell {
+  text-align: begin;
+}
+
 .scatterplot {
 
     stroke-width: 0.5;
@@ -250,13 +257,15 @@
     </div>
   </section>
 
-<section class="container" id="bottommap">
+<section id="bottommap">
+<div class="container">
 <!-- <h2 class="nine columns">Boston metro area affordability map</h3> -->
-  <div id="map2">
-    <div class="row">
-      <h3 class="eleven columns">Boston permits</h3>
+  <!-- <div id="map2"> -->
+    <div class="column12" prefix3>
+      <h3>Boston permits</h3>
       <!-- <div class="grid txt-center"> -->
-      <div class="grid txt-center" id="selector"><!-- Map container -->
+    </div>
+      <div class="grid txt-center" id="selector">
       <div class="column6">
       <h4>Choose Data</h4>
         <select id="select-key-time">
@@ -269,7 +278,7 @@
           <option value="post2014"  selected="selected">Post 2014</option>
         </select>
       </div>
-      </div>
+      <!-- </div> -->
       <div class="column6">
       <h4>Choose Date Range</h4>
         <select id="select-key-data">
@@ -277,7 +286,10 @@
           <option value="Code">Code Enforcement</option>
           <option value="Crime">Crime</option>
         </select>
-    </div>
+      </div>
+      <div id="map2" class="column8"> </div>
+      <div id="legendBoxBottom" class="column4"> <br></div>
+      </div>
   </div>
 </section>
       
