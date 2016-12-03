@@ -23,18 +23,24 @@ mapVars.Perc_Water = GeoData_Joined.areaWater./(GeoData_Joined.areaLand + GeoDat
 mapVars.Pop_2009 = GeoData_Joined.Pop_2009;
 mapVars.PopDen_2009 = mapVars.Pop_2009./mapVars.areaLand;
 mapVars.Pop_Black_2009 = GeoData_Joined.Pop_Black_2009;
+mapVars.Pop_Hispanic_2009 = GeoData_Joined.Pop_WhiteHisp_2009;
 mapVars.Pop_WhiteNH_2009 = GeoData_Joined.Pop_WhiteNonHisp_2009;
 mapVars.Pop_NonWhite_2009 = mapVars.Pop_2009 - mapVars.Pop_WhiteNH_2009;
 mapVars.Perc_NonWhite_2009 = mapVars.Pop_NonWhite_2009./mapVars.Pop_2009;
-
+mapVars.Perc_Black_2009 = mapVars.Pop_Black_2009./mapVars.Pop_2009;
+mapVars.Perc_Hispanic_2009 = mapVars.Pop_Hispanic_2009./mapVars.Pop_2009;
 
 
 mapVars.Pop_2014 = GeoData_Joined.Pop_2014;
 mapVars.PopDen_2014 = mapVars.Pop_2014./mapVars.areaLand;
 mapVars.Pop_Black_2014 = GeoData_Joined.Pop_Black_2014;
+mapVars.Pop_Hispanic_2014 = GeoData_Joined.Pop_WhiteHisp_2014;
 mapVars.Pop_WhiteNH_2014 = GeoData_Joined.Pop_WhiteNonHisp_2014;
 mapVars.Pop_NonWhite_2014 = mapVars.Pop_2014 - mapVars.Pop_WhiteNH_2014;
 mapVars.Perc_NonWhite_2014 = mapVars.Pop_NonWhite_2014./mapVars.Pop_2014;
+mapVars.Perc_Black_2014 = mapVars.Pop_Black_2014./mapVars.Pop_2014;
+mapVars.Perc_Hispanic_2014 = mapVars.Pop_Hispanic_2014./mapVars.Pop_2014;
+
 
 mapVars.PopDen_Change = mapVars.PopDen_2014 - mapVars.PopDen_2009;
 
@@ -89,7 +95,7 @@ mapVars.Pop_NonWhite_Change = mapVars.Pop_NonWhite_2014 - mapVars.Pop_NonWhite_2
 mapVars.Perc_NonWhite_Change = mapVars.Perc_NonWhite_2014 - mapVars.Perc_NonWhite_2009;
 mapVars.Perc_Displaced(mapVars.Perc_Displaced < -0.2) = nan;
 mapVars.Perc_NonWhite_Change(mapVars.Perc_NonWhite_Change < -0.5) = nan;
-
+mapVars.PopDen_Change(mapVars.PopDen_Change < -1e4) = nan;
 
 writetable(mapVars,'ACS_Map_Data.csv');
 %%

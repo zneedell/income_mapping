@@ -239,7 +239,7 @@ function updateData(dataKey,timeKey) {
 //     return "Neighborhood: " +
 //       d.properties.Name
 //      });
-svgBottom.selectAll("legendOriginal")
+svgBottom.selectAll(".legendOriginal")
   .remove()
 APIstring = updateAPIstring(dataKey,timeKey);
 pointClass = getClass(dataKey);
@@ -299,6 +299,7 @@ d3.json(APIstring,function(error, permitData) {
 
 svgBottom.append("g")
   .attr("class","legendOrdinal")
+  .attr("id", "bottomLegend")
   .attr("fill","black")
   .attr("transform","translate(700,50)");
 

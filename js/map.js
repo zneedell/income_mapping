@@ -67,15 +67,19 @@ var r = d3.scaleSqrt()
   .range([0,7])
   .domain([0,10000]);
 
+
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
+    .attr("id","topmapsvg")
     .attr("height", height);
 
 var svg2 = d3.select("#chart").append("svg")
     .attr("width", plotwidth + margin.left + margin.right)
     .attr("height", plotheight + margin.top + margin.bottom)
     .attr("class", "chart")
+    .attr("id","scatterChart")
     .append("g")
+    .attr("id","scatterplotgroup")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
@@ -160,7 +164,7 @@ var activeColorDomain;
   // d3.json("build/bgs.json", function(error, bgs) {
   function ready(error,tracts) {
     if (error) return console.error(error);
-
+    var mousebeingheld = false;
     var neighborhoods = svgBottom.append( "g" ).attr( "id", "neighborhoods" );
       neighborhoods.selectAll( "path" )
       .data(topojson.feature(tracts, tracts.objects.tracts).features)
@@ -184,6 +188,7 @@ var activeColorDomain;
       // updateFillColor(null)
 
     function onTractClick(elemData) {
+       console.log(elemData)
        var chosenTract = svg.selectAll("path")
           .filter(function(d) {return d.id == elemData.id})
         chosenTract.classed("selected", !chosenTract.classed("selected"))
@@ -230,6 +235,10 @@ var activeColorDomain;
       .attr("id", function(d) {
         return d.id})
       .on("click",onTractClick)
+      .on("mouseover", function(d){
+          if (mousebeingheld == true)
+            {onTractClick(d)}
+        })
       .style("fill",function(d) {return color(d.properties[KeyColor])})
        .append("title")
          .text(function(d) {return "coords: " + d.properties[KeyX] + ", " + d.properties[KeyY]})
@@ -270,7 +279,7 @@ var activeColorDomain;
         color.domain(getNiceExtent(tracts.objects.tracts.geometries,key))
         .range(d3.schemeBlues[9]);
       };
-      d3.select(".container")
+      d3.select("#legend")
         .selectAll("ul")
         .remove();
       var legend = d3.select('#legend')
@@ -316,20 +325,24 @@ var activeColorDomain;
           else {return color(+d.properties[currentKey] )};
         })
         .on("click", onTractClick)
+        // .on("mouseover", function(d){
+        //   if (mousebeingheld == true)
+        //     {onTractClick(d)}
+        // })
         .append("title")
         .text(function(d) { return "Value: " + d.properties[currentKey]  + ' ' + currentKey; })
-        .on("mouseover", function(d) {
-          div.transition()
-            .duration(200)
-            .style("opacity", .9);
-          div.html(
-            '<a href= "http://google.com">' + // The first <a> tag
-              'aaaaah' +
-                "</a>" +                          // closing </a> tag
-                "<br/>" + "bbbbb")     
-            .style("left", (d3.event.pageX) + "px")             
-            .style("top", (d3.event.pageY - 28) + "px");
-       });
+       //  .on("mouseover", function(d) {
+       //    div.transition()
+       //      .duration(200)
+       //      .style("opacity", .9);
+       //    div.html(
+       //      '<a href= "http://google.com">' + // The first <a> tag
+       //        'aaaaah' +
+       //          "</a>" +                          // closing </a> tag
+       //          "<br/>" + "bbbbb")     
+       //      .style("left", (d3.event.pageX) + "px")             
+       //      .style("top", (d3.event.pageY - 28) + "px");
+       // });
     // console.log(towns.features[1].geometry)
     // g.append("path")
     //   .datum(topojson.mesh(counties))
@@ -354,6 +367,27 @@ var activeColorDomain;
     currentKeyY = d3.select(this).property('value');
     updateScatter(currentKeyX,currentKeyY,currentKey);
     })
+
+  d3.select("#scatterChart")
+    .each(function(d) {
+      console.log("loaded something")
+      console.log(d)})
+     .on("mousedown",function(a){
+      mousebeingheld = !mousebeingheld;
+      return mousebeingheld})
+     .on("mouseup",function(a){
+      mousebeingheld = false;
+      return mousebeingheld})
+  d3.select("#topmapsvg")
+    .each(function(d) {
+      console.log("loaded something")
+      console.log(d)})
+     .on("mousedown",function(a){
+      mousebeingheld = !mousebeingheld;
+      return mousebeingheld})
+     .on("mouseup",function(a){
+      mousebeingheld = false;
+      return mousebeingheld})
 updateMap(currentKey);
 updateScatter(currentKeyX,currentKeyY,currentKey);
 updateData(dataKey,timeKey)
