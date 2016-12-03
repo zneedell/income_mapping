@@ -90,12 +90,17 @@
 </style>
 <head>
 <title>Boston Metro Housing Mapping</title>
-<link rel="stylesheet" href="css/main.css" />
+<!-- <link rel="stylesheet" href="css/main.css" /> -->
+<link rel="stylesheet" href="css/minimal-ui.css" />
 <!-- <link href="css/style.css" rel="stylesheet" type="text/css"> -->
 <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" type="text/css"> -->
+<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
 <script src="js/neighborhoods_mod.js"></script>
 <script src="https://unpkg.com/topojson@2"></script>
 <script src="js/d3-legend.js"></script>
+
 </head>
 <body>
 
@@ -110,17 +115,19 @@
         <select id="select-key" class="three columns">
           <option value="median_income_2009">Median Income 2009</option>
           <option value="median_income_2014" selected="selected">Median Income 2014</option>
-          <option value="households_2009">Households 2009</option>
-          <option value="households_2014">Households 2014</option>
+          <option value="popDen_2009">Population Density 2009</option>
+          <option value="popDen_2014">Population Density 2014</option>
+          <option value="popDen_Change">Population Density Change</option>
           <option value="median_rent_2009">Median Rent 2009</option>
           <option value="median_rent_2014">Median Rent 2014</option>
+          <option value="median_rent_Change">Median Rent Change</option>
+
           <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
           <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
           <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
           <option value="perc_rentBurdened_2014">Percent Rent Burdened 2014</option>
           <option value="perc_unitsOwned_2009">Percent of Units Owned 2009 </option>
           <option value="perc_unitsOwned_2014">Percent of Units Owned 2014 </option>
-          <option value="median_rent_Change">Median Rent Change</option>
           <option value="median_inc_Change">Median Income Change</option>
           <option value="median_perc_rent_Change">Median % Rent Change</option>
           <option value="median_perc_inc_Change">Median % Income Change</option>
@@ -142,20 +149,24 @@
       <div class="flex-item left">
       <h5> X value: </h5>
       <select id="select-key-x" class="three columns">
-          <option value="median_income_2009" selected="selected">Median Income 2009</option>
+          <option value="median_income_2009"  selected="selected">Median Income 2009</option>
           <option value="median_income_2014">Median Income 2014</option>
-          <option value="households_2009">Households 2009</option>
-          <option value="households_2014">Households 2014</option>
+          <option value="popDen_2009">Population Density 2009</option>
+          <option value="popDen_2014">Population Density 2014</option>
+          <option value="popDen_Change">Population Density Change</option>
           <option value="median_rent_2009">Median Rent 2009</option>
           <option value="median_rent_2014">Median Rent 2014</option>
+          <option value="median_rent_Change">Median Rent Change</option>
+
           <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
           <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
           <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
           <option value="perc_rentBurdened_2014">Percent Rent Burdened 2014</option>
           <option value="perc_unitsOwned_2009">Percent of Units Owned 2009 </option>
           <option value="perc_unitsOwned_2014">Percent of Units Owned 2014 </option>
-          <option value="median_rent_Change">Median Rent Change</option>
           <option value="median_inc_Change">Median Income Change</option>
+          <option value="median_perc_rent_Change">Median % Rent Change</option>
+          <option value="median_perc_inc_Change">Median % Income Change</option>
           <option value="perc_nonWhite_Change">Percent Non-White Change</option>
           <option value="perc_displaced">Percent Displaced</option>
           <option value="perc_arrival">Percent New Arrivals</option>
@@ -192,6 +203,24 @@
   <div id="map2">
     <div class="row">
       <h3 class="eleven columns">Boston permits</h3>
+      <div id="selector"><!-- Map container -->
+      <h3>Choose Data</h3>
+        <select id="select-key-time">
+          <option value="Pre2010">Pre-2010</option>
+          <option value="in2010">2010</option>
+          <option value="in2011">2011</option>
+          <option value="in2012">2012</option>
+          <option value="in2013">2013</option>
+          <option value="in2014">2014</option>
+          <option value="post2014"  selected="selected">Post 2014</option>
+        </select>
+      </div>
+      <h3>Choose Date Range</h3>
+        <select id="select-key-data">
+          <option value="Permits" selected="selected">Permits</option>
+          <option value="Code">Code Enforcement</option>
+          <option value="Crime">Crime</option>
+        </select>
     </div>
   </div>
 </section>
@@ -207,9 +236,6 @@
     </div>
   </footer>
 
-<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-<script src="https://d3js.org/topojson.v2.min.js"></script>
  <script src="js/map.js"></script>
  <script src="js/secondMap.js"></script>
 

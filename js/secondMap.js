@@ -206,47 +206,50 @@ var svgBottom = d3.select( "#map2" )
   .attr( "width", width )
   .attr( "height", height );
 
+var allpermits = svgBottom.append( "g" )
+  .attr( "id", "permits" )
+  .attr("class","bubble");
+
 var fillColor = d3.scaleQuantize()
   .range(d3.schemeBlues[9])
   .domain([0,200]);
 
-var albersProjection = d3.geoAlbers()
-  .scale( 190000 )
-  .rotate( [71.057,0] )
-  .center( [0, 42.313] )
-  .translate( [width/2 - 150,height/2] );
-var geoPath = d3.geoPath()
-    .projection( albersProjection );
+// var albersProjection = d3.geoAlbers()
+//   .scale( 190000 )
+//   .rotate( [71.057,0] )
+//   .center( [0, 42.313] )
+//   .translate( [width/2 - 150,height/2] );
+// var geoPath = d3.geoPath()
+//     .projection( albersProjection );
 
 var selectedType = null;
 
 function updateData(dataKey,timeKey) {
 
-svgBottom.selectAll("g").remove();
-var neighborhoods = svgBottom.append( "g" ).attr( "id", "neighborhoods" );
-neighborhoods.selectAll( "path" )
-  .data( neighborhoods_boston_json.features )
-  .enter()
-  .append( "path" )
-  .attr( "d", geoPath )
-  .append("title")
-    .text(function(d) {
-    d.Count = 0;
-    return "Neighborhood: " +
-      d.properties.Name
-     });
-
+// svgBottom.selectAll("g").remove();
+// var neighborhoods = svgBottom.append( "g" ).attr( "id", "neighborhoods" );
+// neighborhoods.selectAll( "path" )
+//   .data( neighborhoods_boston_json.features )
+//   .enter()
+//   .append( "path" )
+//   .attr( "d", geoPath )
+//   .append("title")
+//     .text(function(d) {
+//     d.Count = 0;
+//     return "Neighborhood: " +
+//       d.properties.Name
+//      });
+svgBottom.selectAll("legendOriginal")
+  .remove()
 APIstring = updateAPIstring(dataKey,timeKey);
 pointClass = getClass(dataKey);
 pointDescription = getDescription(dataKey);
 var color = d3.scaleOrdinal(d3.schemeCategory10);
 d3.json(APIstring,function(error, permitData) {
   if (error) return console.warn(error);
-  var allpermits = svgBottom.append( "g" )
-  .attr( "id", "permits" )
-  .attr("class","bubble");
-  d3.select("svg")
-  .selectAll("circle")
+
+  // d3.select("allpermits")
+  allpermits.selectAll("circle")
   .remove();
     allpermits.selectAll( "circle" )
     .data(permitData)
@@ -289,22 +292,28 @@ d3.json(APIstring,function(error, permitData) {
      + ")"
    })
     ;
+// svgBottom.select("allpermits").transition()
+//         .attr("transform", "translate(" +0+ "," + 0 + ")"
+//         + "scale(" + 1.1 + ")"
+//         + "translate(" + 0 + ",-100)")
 
 svgBottom.append("g")
   .attr("class","legendOrdinal")
+  .attr("fill","black")
   .attr("transform","translate(700,50)");
 
 
-// var legendOrdinal = d3.legendColor()
-//   // .shape("path", d3.symbol().type(d3.symbolTriangle).size(150)())
-//     .shapePadding(1)
-//     .labelFormat(d3.format(".2f"))
-//     .scale(color);
+var legendOrdinal = d3.legendColor()
+  // .shape("path", d3.symbol().type(d3.symbolTriangle).size(150)())
+    .shapePadding(5)
+    .labelFormat(d3.format(".2f"))
+    .scale(color);
 
-// svgBottom.select(".legendOrdinal")
-    // .call(legendOrdinal);
+svgBottom.select(".legendOrdinal")
+    // .style("stroke","red")
+    .call(legendOrdinal);
 
-updateFillColor(null)
+// updateFillColor(null)
 // onClick(selectedType);
 
 svgBottom.selectAll("rect")
@@ -317,67 +326,112 @@ svgBottom.selectAll("rect")
 
 function onMouseOver(elemData) {
   if (selectedType == null) {
-  d3.select("svgBottom").selectAll("circle")
+  svgBottom.selectAll("circle")
   .filter( function(d) { return classifyPoint(d,dataKey) == elemData;})
   .style("stroke-width",2)
   .style("opacity",0.9)
   .attr("r", 6)
-  d3.select("svgBottom").selectAll("circle")
+  svgBottom.selectAll("circle")
   .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
   .style("opacity",0.2)}
 }
 
 function onMouseOut(elemData) {
   if (selectedType == null) {
-  d3.select("svgBottom").selectAll("circle")
+  svgBottom.selectAll("circle")
   .filter( function(d) { return classifyPoint(d,dataKey) == elemData;})
   .style("stroke-width",0)
   .style("opacity",1)
   .attr("r", 2.5)
-  d3.select("svgBottom").selectAll("circle")
+  svgBottom.selectAll("circle")
   .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
   .style("opacity",1)}
 }
 
 function updateFillColor(matchMe) {
+  var countrange = [];
   console.log(matchMe)
-  neighborhoods.selectAll("path")
-    .attr("Count", function(d) {
-      d.Count = 0;
-      return (d.Count);
-    });
-  allpermits.selectAll( "circle" )
-    .filter(function(d) {
-      if(matchMe == null){
-        return true}
-      else {
+  svgBottom.selectAll("path")
+    // .attr("Count", function(d) {
+    //   // console.log(d)
+    //   d.Count = 0;
+    //   return (d.Count);
+    // })
+  // console.log(tracts.features.length)
+  // svgBottom.selectAll( "permits" )
+    .each(function(d) {
+      d.properties.Count = 0;
+        // console.log("this is it")
+     //  // console.log(classifyPoint(d,dataKey))
+     //  if(matchMe == null){
+     //    return true}
+     //  else {
+     //  //   console.log(classifyPoint(d,dataKey))
+     //    return classifyPoint(d,dataKey) == matchMe;
+     //  }})
+     // .each( function(d) {
+        
+        // if(matchMe == null || classifyPoint(d,dataKey) == matchMe)
+        // {console.log(classifyPoint(d,dataKey))
+        svgBottom.selectAll("circle")
+        .filter( function(d) {
+          if(matchMe == null){
+            return true}
+          else {
         return classifyPoint(d,dataKey) == matchMe;
-      }})
-    .attr("Neighborhood", function(d) {
+         }})
+        .each(function(f) { 
+          // console.log("this is it again")
+          // console.log(d)
+          // console.log(albersProjection(f.location.coordinates))
+          // fbalijwf()
+          if (isInside(d.geometry, albersProjection(f.location.coordinates)))
+              {
+              // {console.log(d)
+              if (d.properties.households_2014 > 0)
+                console.log(d.properties.households_2014)
+              {d.properties.Count = d.properties.Count + 1/d.properties.households_2014}}}
+              // {d.properties.Count = d.properties.Count + 1}}}
 
-      var nhood = "bad";
-      for (var i=0 ; i<neighborhoods_boston_json.features.length ; i++){
-        var geom = (neighborhoods_boston_json.features[i].geometry);
-        if (isInside(neighborhoods_boston_json.features[i].geometry, d.location.coordinates)) {
-          nhood = neighborhoods_boston_json.features[i].properties.Name
-          neighborhoods_boston_json.features[i].Count = neighborhoods_boston_json.features[i].Count + 1;
-          };
-      }
-      d.Neighborhood = nhood
-      return nhood
-    });
-  var collection_array = d3.values(neighborhoods_boston_json.features);
-  fillColor.domain([0,d3.max(collection_array,function (d) { return d.Count})])
-  neighborhoods.selectAll("path")
-    .style("fill",function(d){ console.log(d.Count/d.properties.density)
-      return fillColor(d.Count)});
+            )
+        if (d.properties.Count >= 0 && d.properties.households_2014 >= 200)
+        {countrange.push(d.properties.Count)}
+      })
+      // console.log(countrange)
+      // console.log(d3.extent(chauvenet(countrange)))
+      colorBottom.domain(d3.extent(countrange))
+      // countrange = 0
+     // colorBottom.domain(getNiceSymmetricalExtent(tracts.objects.tracts.geometries,key))
 
-  
+     svgBottom.selectAll("path")
+        .style("fill",function(d) {return colorBottom(d.properties.Count)});
+
+     
+    // .attr("Neighborhood", function(d) {
+      // var nhood = "bad";
+      // for (var i=0 ; i<neighborhoods_boston_json.features.length ; i++){
+        // var geom = (neighborhoods_boston_json.features[i].geometry);
+        // if (isInside(neighborhoods_boston_json.features[i].geometry, d.location.coordinates)) {
+        //   nhood = neighborhoods_boston_json.features[i].properties.Name
+        //   neighborhoods_boston_json.features[i].Count = neighborhoods_boston_json.features[i].Count + 1;
+        //   };
+
+      
+      // d.Neighborhood = nhood
+      // return nhood}));
+    
+  // var collection_array = d3.values(neighborhoods_boston_json.features);
+  // fillColor.domain([0,d3.max(collection_array,function (d) { return d.properties.Count})])
+  // svgBottom.select("neighborhoods").selectAll("path")
+  //   .style("fill",function(d){ console.log(d.properties.Count/d.properties.density)
+  //     return fillColor(d.Count)});
+
+  // updateFillColor(null)
 }
 
 function onClick(elemData) {
   if (selectedType == elemData) {
-    d3.select("svgBottom").selectAll("circle")
+    svgBottom.selectAll("circle")
     .style("stroke-width",0)
     .style("visibility","visible")
     .attr("r", 2.5)
@@ -386,13 +440,13 @@ function onClick(elemData) {
     updateFillColor(null)
     selectedType = null}
   else if (selectedType == null) {
-    d3.select("svgBottom").selectAll("circle")
+    svgBottom.selectAll("circle")
     .filter( function(d) { return classifyPoint(d,dataKey) == elemData;})
     .style("stroke-width",2)
     .style("visibility","visible")
     .style("opacity",0.3)
     .attr("r", 5)
-    d3.select("svgBottom").selectAll("circle")
+    svgBottom.selectAll("circle")
     .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
     .style("visibility","hidden")
     .attr("r", 2.5)
@@ -402,18 +456,18 @@ function onClick(elemData) {
     selectedType = elemData
   }
   else {
-    d3.select("svgBottom").selectAll("circle")
+    svgBottom.selectAll("circle")
     .style("stroke-width",0)
     .style("visibility","visible")
     .attr("r", 2.5)
     .style("opacity",1)
-    d3.select("svgBottom").selectAll("circle")
+    svgBottom.selectAll("circle")
     .filter( function(d) { return classifyPoint(d,dataKey) == elemData;})
     .style("stroke-width",2)
     .style("visibility","visible")
     .style("opacity",0.3)
     .attr("r", 5)
-    d3.select("svgBottom").selectAll("circle")
+    svgBottom.selectAll("circle")
     .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
     .style("visibility","hidden")
     .style("opacity",0.9)
@@ -453,4 +507,4 @@ d3.select('#select-key-data').on('change', function(a) {
   updateData(dataKey,timeKey);
 });
 
-updateData(dataKey,timeKey)
+// updateData(dataKey,timeKey)

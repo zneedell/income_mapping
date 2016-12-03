@@ -60,6 +60,9 @@ var y = d3.scaleLinear()
   .range([plotheight,margin.bottom])
   .domain([-1,1]);
 
+var colorBottom = d3.scaleQuantize()
+    .range(d3.schemeBlues[9])
+
 var r = d3.scaleSqrt()
   .range([0,7])
   .domain([0,10000]);
@@ -97,6 +100,7 @@ var maxvalue,
   minvalue,
   truemin,
   truemax;
+
 
 //var mapdata
 
@@ -156,6 +160,28 @@ var activeColorDomain;
   // d3.json("build/bgs.json", function(error, bgs) {
   function ready(error,tracts) {
     if (error) return console.error(error);
+
+    var neighborhoods = svgBottom.append( "g" ).attr( "id", "neighborhoods" );
+      neighborhoods.selectAll( "path" )
+      .data(topojson.feature(tracts, tracts.objects.tracts).features)
+      .enter()
+      .append( "path" )
+      .style("stroke", "red")    // set the line colour
+      .style("fill", "none")
+        .attr( "d", path )
+        .append("title")
+          .text(function(d) {
+            d.Count = 0;
+            return "Neighborhood: " +
+          d.properties.Name
+      })
+      // neighborhoods.transition()
+      //   .attr("transform", "translate(" +0+ "," + 0 + ")"
+      //   + "scale(" + 1.1 + ")"
+      //   + "translate(" + 0 + ",-100)")
+      ;
+
+      // updateFillColor(null)
 
     function onTractClick(elemData) {
        var chosenTract = svg.selectAll("path")
@@ -267,7 +293,7 @@ var activeColorDomain;
     function updateMap(key) {
     clearTractStatus()
     updateColors(key)
-    console.log(topojson.feature(tracts, tracts.objects.tracts).features)
+    // console.log(topojson.feature(tracts, tracts.objects.tracts).features)
     d3.select("g")
       .selectAll("path")
       .remove();
@@ -329,8 +355,8 @@ var activeColorDomain;
     updateScatter(currentKeyX,currentKeyY,currentKey);
     })
 updateMap(currentKey);
-  updateScatter(currentKeyX,currentKeyY,currentKey);
-  
+updateScatter(currentKeyX,currentKeyY,currentKey);
+updateData(dataKey,timeKey)
   // updateXaxis(currentKeyX);
   // updateYaxis(currentKeyY);
   console.log("first map update")
