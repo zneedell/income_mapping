@@ -242,7 +242,7 @@ var activeColorDomain;
       .append("circle")
       .attr("class","scatterplot")
       .classed("selected",false)
-      .filter(function(d){return d.properties[KeyX] > -1000 && d.properties[KeyX] !== null && d.properties[KeyY] !== null && d.properties[KeyY] > -1000 && d.properties[KeyX] !== 0 && d.properties[KeyY] !== 0})
+      .filter(function(d){return d.properties[KeyX] > -1000 && d.properties[KeyX] !== null && d.properties[KeyY] !== null && d.properties[KeyY] > -2000 && d.properties[KeyX] !== 0 && d.properties[KeyY] !== 0})
       .attr("r",function(d) {return r(d.properties.population_2014)})
       .attr("cx", function(d) {return x(d.properties[KeyX])})
       .attr("cy", function(d) {return y(d.properties[KeyY])})
