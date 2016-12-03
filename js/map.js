@@ -402,8 +402,8 @@ neighborhoods_cambridge.selectAll( "path" )
     return "Neighborhood: " +
       d.properties.NAME
      });
-console.log(neighborhoods_boston_json)
-console.log(neighborhoods_cambridge_json)
+// console.log(neighborhoods_boston_json)
+// console.log(neighborhoods_cambridge_json)
 
 
 

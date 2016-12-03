@@ -95,15 +95,16 @@
 <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" type="text/css"> -->
 <script src="js/neighborhoods_mod.js"></script>
 <script src="https://unpkg.com/topojson@2"></script>
+<script src="js/d3-legend.js"></script>
 </head>
 <body>
 
 
-<div class="container">
+<section class="container">
 <!-- <h2 class="nine columns">Boston metro area affordability map</h3> -->
-      <div id="map"><!-- Map container -->
+  <div id="map"><!-- Map container -->
         
-      <div class="row">
+    <div class="row">
         <h1 class="eleven columns">Boston metro area affordability map</h1>
         <br>
         <select id="select-key" class="three columns">
@@ -127,18 +128,20 @@
           <option value="perc_displaced">Percent Displaced</option>
           <option value="perc_arrival">Percent New Arrivals</option>
         </select>
-      </div>
+    </div>
 
-      </div>
-      <div id="legend"><!-- Legend container --></div>
-      <br>
-      <div id="details" class="hidden row"><!-- Details container --></div>
-      <div class="row">
-        <h4 class="nine columns">Census Block Comparisons</h3>
-        <br>
-        <div class="row">
-        <h5> X value: </h5>
-        <select id="select-key-x" class="three columns">
+  </div>
+  <div id="legend"><!-- Legend container --></div>
+  <br>
+  <div id="details" class="hidden row"><!-- Details container --></div>
+  <div class="row">
+    <h2 class="nine columns">Census Block Comparisons</h2>
+  </div>
+  <div class="row">
+    <div class="inner flex flex-2">
+      <div class="flex-item left">
+      <h5> X value: </h5>
+      <select id="select-key-x" class="three columns">
           <option value="median_income_2009" selected="selected">Median Income 2009</option>
           <option value="median_income_2014">Median Income 2014</option>
           <option value="households_2009">Households 2009</option>
@@ -157,11 +160,10 @@
           <option value="perc_displaced">Percent Displaced</option>
           <option value="perc_arrival">Percent New Arrivals</option>
         </select>
-        </div>
-<!--         <br> -->
-        <div class="row">
-        <h5> Y value: </h5>
-        <select id="select-key-y" class="three columns">
+      </div>
+    <div class="flex-item right">
+    <h5> Y value: </h5>
+    <select id="select-key-y" class="three columns">
           <option value="median_income_2009">Median Income 2009</option>
           <option value="median_income_2014" selected="selected">Median Income 2014</option>
           <option value="households_2009">Households 2009</option>
@@ -179,27 +181,36 @@
           <option value="perc_nonWhite_Change">Percent Non-White Change</option>
           <option value="perc_displaced">Percent Displaced</option>
           <option value="perc_arrival">Percent New Arrivals</option>
-        </select>
-        </div>
-        <div id="chart"><!-- Chart container --></div>
-      </div>
+    </select>
+  </div>
+  </div>
+  <div id="chart"><!-- Chart container --></div>
+</section>
+
+<section class="container">
+<!-- <h2 class="nine columns">Boston metro area affordability map</h3> -->
+  <div id="map2">
+    <div class="row">
+      <h3 class="eleven columns">Boston permits</h3>
+    </div>
+  </div>
+</section>
       
-      <footer id="footer">
-        <div class="inner">
-          <ul class="actions">
-            <li><span class="icon fa-envelope"></span> <a href="#">zneedell@gmail.com</a></li>
+  <footer id="footer">
+    <div class="inner">
+      <ul class="actions">
+        <li><span class="icon fa-envelope"></span> <a href="#">zneedell@gmail.com</a></li>
           </ul>
-        </div>
-        <div class="copyright">
+    </div>
+    <div class="copyright">
           Design from <a href="https://templated.co">TEMPLATED</a>. Images <a href="https://unsplash.com">Style: Unsplash</a>.
-        </div>
-      </footer>
+    </div>
+  </footer>
 
 <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-<!-- <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script> -->
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script src="https://d3js.org/topojson.v2.min.js"></script>
-<!-- <script src="d3-tip.js"></script>
- --><script src="js/map.js"></script>
+ <script src="js/map.js"></script>
+ <script src="js/secondMap.js"></script>
 
 </body>
