@@ -239,7 +239,11 @@ function updateData(dataKey,timeKey) {
 //     return "Neighborhood: " +
 //       d.properties.Name
 //      });
-svgBottom.selectAll(".legendOriginal")
+// svgBottom.selectAll(".legendOriginal")
+selectedType = null;
+d3.select("#legendBoxBottom")
+  .select("#bottomLegend")
+  .selectAll("g")
   .remove()
 APIstring = updateAPIstring(dataKey,timeKey);
 pointClass = getClass(dataKey);
@@ -268,7 +272,7 @@ d3.json(APIstring,function(error, permitData) {
     //   return nhood
     // })
     .attr("class", function(d){return classifyPoint(d,dataKey)})
-    .attr("r", 2.5)
+    .attr("r", 1.5)
     .style("stroke","black")
     .style("stroke-width",0)
     .on("mouseover", function()
@@ -276,7 +280,7 @@ d3.json(APIstring,function(error, permitData) {
       else {d3.select(this).style("fill","black")};
     })
     .on("mouseout", function()
-      {if (selectedType == null) {d3.select(this).attr("r",2.5)}
+      {if (selectedType == null) {d3.select(this).attr("r",1.5)}
       else {d3.select(this).style("fill",function(d){return colorDots(classifyPoint(d,dataKey))})};
     })
     .style("fill",function(d){return colorDots(classifyPoint(d,dataKey))})
@@ -298,21 +302,13 @@ d3.json(APIstring,function(error, permitData) {
      + ")"
    })
     ;
-// svgBottom.select("allpermits").transition()
-//         .attr("transform", "translate(" +0+ "," + 0 + ")"
-//         + "scale(" + 1.1 + ")"
-//         + "translate(" + 0 + ",-100)")
-
-// svgBottom.append("g")
 d3.select("#legendBoxBottom")
   .append("svg")
-  .attr("height", height-10)
+  .attr("height", height/2)
   .append("g")
-  // .attr("transform", "translate(220,0)")
   .attr("class","legendOrdinal")
   .attr("id", "bottomLegend")
-  // .attr("fill","black")
-  // .attr("transform","translate(700,50)");
+
 
 
 var legendOrdinal = d3.legendColor()
@@ -335,8 +331,6 @@ d3.select("#legendBoxBottom")
   .selectAll("rect")
     .style("stroke","black")
     .style("stroke-width",0)
-    // .attr("transform", "translate(50,0)")
-    // .attr("height",15)
    .on("mouseover",onMouseOver)
    .on("mouseout",onMouseOut)
    .on("click",onClick);
@@ -360,7 +354,7 @@ function onMouseOut(elemData) {
   .filter( function(d) { return classifyPoint(d,dataKey) == elemData;})
   .style("stroke-width",0)
   .style("opacity",1)
-  .attr("r", 2.5)
+  .attr("r", 1.5)
   svgBottom.selectAll("circle")
   .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
   .style("opacity",1)}
@@ -370,27 +364,8 @@ function updateFillColor(matchMe) {
   var countrange = [];
   // console.log(matchMe)
   svgBottom.selectAll("path")
-    // .attr("Count", function(d) {
-    //   // console.log(d)
-    //   d.Count = 0;
-    //   return (d.Count);
-    // })
-  // console.log(tracts.features.length)
-  // svgBottom.selectAll( "permits" )
     .each(function(d) {
       d.properties.Count = 0;
-        // console.log("this is it")
-     //  // console.log(classifyPoint(d,dataKey))
-     //  if(matchMe == null){
-     //    return true}
-     //  else {
-     //  //   console.log(classifyPoint(d,dataKey))
-     //    return classifyPoint(d,dataKey) == matchMe;
-     //  }})
-     // .each( function(d) {
-        
-        // if(matchMe == null || classifyPoint(d,dataKey) == matchMe)
-        // {console.log(classifyPoint(d,dataKey))
         svgBottom.selectAll("circle")
         .filter( function(d) {
           if(matchMe == null){
@@ -400,12 +375,8 @@ function updateFillColor(matchMe) {
          }})
         .each(function(f) { 
           if (isInside(d.geometry, albersProjection(f.location.coordinates)))
-              {
-              // {console.log(d)
-              if (d.properties.households_2014 > 0)
-                // console.log(d.properties.households_2014)
+              {if (d.properties.households_2014 > 0)
               {d.properties.Count = d.properties.Count + 1/d.properties.households_2014}}}
-              // {d.properties.Count = d.properties.Count + 1}}}
 
             )
         if (d.properties.Count >= 0 && d.properties.households_2014 >= 200)
@@ -413,19 +384,37 @@ function updateFillColor(matchMe) {
       })
       colorBottom.domain(d3.extent(countrange))
      svgBottom.selectAll("path")
-        .style("fill",function(d) {return colorBottom(d.properties.Count)});
+        .style("fill",function(d) {return colorBottom(d.properties.Count)})
+        .style("opacity",0.3)
+        // .moveToBack();
 
 }
+
+
+// function onMouseOver(elemData) {
+//   // console.log(elemData)
+//   if (selectedType == null) {
+//   svgBottom.selectAll("circle")
+//   .filter( function(d) { return classifyPoint(d,dataKey) == elemData;})
+//   .style("stroke-width",2)
+//   .style("opacity",0.9)
+//   .attr("r", 6)
+//   svgBottom.selectAll("circle")
+//   .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
+//   .style("opacity",0.2)}
+// }
 
 function onClick(elemData) {
   if (selectedType == elemData) {
     svgBottom.selectAll("circle")
     .style("stroke-width",0)
     .style("visibility","visible")
-    .attr("r", 2.5)
+    .attr("r", 1.5)
     .style("opacity",1)
     d3.select(this).style("stroke-width",0)
     updateFillColor(null)
+    // svgBottom.selectAll("circle")
+    //   .moveToFront();
     selectedType = null}
   else if (selectedType == null) {
     svgBottom.selectAll("circle")
@@ -437,17 +426,19 @@ function onClick(elemData) {
     svgBottom.selectAll("circle")
     .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
     .style("visibility","hidden")
-    .attr("r", 2.5)
+    .attr("r", 1.5)
     .style("stroke-width",0)
     d3.select(this).style("stroke-width",3)
     updateFillColor(elemData)
-    selectedType = elemData
+    // svgBottom.selectAll("circle")
+    //   .moveToFront();
+    selectedType = elemData;
   }
   else {
     svgBottom.selectAll("circle")
     .style("stroke-width",0)
     .style("visibility","visible")
-    .attr("r", 2.5)
+    .attr("r", 1.5)
     .style("opacity",1)
     svgBottom.selectAll("circle")
     .filter( function(d) { return classifyPoint(d,dataKey) == elemData;})
@@ -458,20 +449,24 @@ function onClick(elemData) {
     svgBottom.selectAll("circle")
     .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
     .style("visibility","hidden")
-    .style("opacity",0.9)
-    .attr("r", 2.5)
+    .style("opacity",1)
+    .attr("r", 1.5)
     .style("stroke-width",0)
     d3.selectAll("rect").style("stroke-width",0)
     d3.select(this).style("stroke-width",3)
     updateFillColor(elemData)
+    // svgBottom.selectAll("circle")
+    //   .moveToFront();
     selectedType = elemData
   }
-  return selectedType
+  // return selectedType
 }
 
-return selectedType
+
+updateFillColor(null)
 
   });
+
 }
     // .attr("title")
   //   // .text(rodentData.comments)

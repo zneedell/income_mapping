@@ -24,7 +24,7 @@ variance = function(x) {
 
 //A test for outliers http://en.wikipedia.org/wiki/Chauvenet%27s_criterion
 function chauvenet (x) {
-    var dMax = 3;
+    var dMax = 5;
     var mean = d3.mean(x);
     var stdv = Math.sqrt(variance(x));
     var counter = 0;
@@ -143,6 +143,15 @@ function getMin(data, prop) {
       });
     };
 
+    d3.selection.prototype.moveToBack = function() {  
+        return this.each(function() { 
+            var firstChild = this.parentNode.firstChild; 
+            if (firstChild) { 
+                this.parentNode.insertBefore(this, firstChild); 
+            } 
+        });
+    };
+
 function getNiceExtent(data, prop) {
       var result = data.map(function(a) {return a.properties[prop];});
       return d3.extent(chauvenet(result))
@@ -170,6 +179,7 @@ var activeColorDomain;
       .data(topojson.feature(tracts, tracts.objects.tracts).features)
       .enter()
       .append( "path" )
+      .attr("class","bottomMapTract")
       .style("stroke", "red")    // set the line colour
       .style("fill", "none")
         .attr( "d", path )
@@ -216,9 +226,11 @@ var activeColorDomain;
     svg2.selectAll("#dots")
       .remove();
       var result = tracts.objects.tracts.geometries.map(function(a) {return a.properties[KeyX];});
-      x.domain(d3.extent(result))//.nice()
+      // x.domain(d3.extent(result))//.nice()
+      x.domain(getNiceExtent(tracts.objects.tracts.geometries,KeyX))//.nice()
       var result = tracts.objects.tracts.geometries.map(function(a) {return a.properties[KeyY];});
-      y.domain(d3.extent(result))//.nice()
+      // y.domain(d3.extent(result))//.nice()
+      y.domain(getNiceExtent(tracts.objects.tracts.geometries,KeyY))//.nice()
       xaxis.call(d3.axisBottom(x))
         // .attr("transform", "translate(0,350)")
       yaxis.call(d3.axisLeft(y))
@@ -230,7 +242,7 @@ var activeColorDomain;
       .append("circle")
       .attr("class","scatterplot")
       .classed("selected",false)
-      .filter(function(d){return d.properties[KeyX] > -1000 && d.properties[KeyX] !== null && d.properties[KeyY] !== null && d.properties[KeyY] > -1000})
+      .filter(function(d){return d.properties[KeyX] > -1000 && d.properties[KeyX] !== null && d.properties[KeyY] !== null && d.properties[KeyY] > -1000 && d.properties[KeyX] !== 0 && d.properties[KeyY] !== 0})
       .attr("r",function(d) {return r(d.properties.population_2014)})
       .attr("cx", function(d) {return x(d.properties[KeyX])})
       .attr("cy", function(d) {return y(d.properties[KeyY])})
@@ -297,7 +309,6 @@ var activeColorDomain;
             .text(function (d, i) {
              return legend_items[i];
               });
-      console.log([minvalue,maxvalue,truemin,truemax])
       return color
     }
 
@@ -345,12 +356,6 @@ var activeColorDomain;
        //      .style("left", (d3.event.pageX) + "px")             
        //      .style("top", (d3.event.pageY - 28) + "px");
        // });
-    // console.log(towns.features[1].geometry)
-    // g.append("path")
-    //   .datum(topojson.mesh(counties))
-    //   // .data(topojson.mesh(towns.features[1].geometry))
-    //   .attr("class", "town")
-      // .attr( "d", path );
   ;}
 
   d3.select('#select-key').on('change', function(a) {
