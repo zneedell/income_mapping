@@ -100,6 +100,10 @@ build/tract2.json: build/tl_2015_25_tract.shp build/aff/ACS_Map_Data.csv
 		--properties='population_2014=+d.properties["Pop_2014"]' \
 		--properties='perc_nonWhite_2009=+d.properties["Perc_NonWhite_2009"]' \
 		--properties='perc_nonWhite_2014=+d.properties["Perc_NonWhite_2014"]' \
+		--properties='perc_Black_2009=+d.properties["Perc_Black_2009"]' \
+		--properties='perc_Black_2014=+d.properties["Perc_Black_2014"]' \
+		--properties='perc_Hispanic_2009=+d.properties["Perc_Hispanic_2009"]' \
+		--properties='perc_Hispanic_2014=+d.properties["Perc_Hispanic_2014"]' \
 		--properties='perc_nonWhite_Change=+d.properties["Perc_NonWhite_Change"]' \
 		--properties='perc_rentBurdened_2009=+d.properties["Perc_RentBurdened_2009"]' \
 		--properties='perc_rentBurdened_2014=+d.properties["Perc_RentBurdened_2014"]' \
@@ -122,7 +126,7 @@ build/tract2.json: build/tl_2015_25_tract.shp build/aff/ACS_Map_Data.csv
   			.rotate( [71.13,0] ) \
   			.center( [0, 42.35] ) \
   			.translate( [width/2,height/2] );' \
-		--simplify=.95 \
+		--simplify=1 \
 		-- tracts=$<
 
 build/bgs.json: build/tl_2015_25_bg.shp build/BG_2014.csv

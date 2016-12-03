@@ -32,6 +32,13 @@
   stroke-width: 2;
 }*/
 
+.label {
+  font-size: 60%;
+}
+.cell {
+  text-align: begin;
+}
+
 .scatterplot {
 
     stroke-width: 0.5;
@@ -45,6 +52,10 @@
 }
 
 .neighborhood {
+  pointer-events: none;
+}
+
+.bottomMapTract {
   pointer-events: none;
 }
 
@@ -90,36 +101,71 @@
 </style>
 <head>
 <title>Boston Metro Housing Mapping</title>
-<link rel="stylesheet" href="css/main.css" />
+<!-- <link rel="stylesheet" href="css/main.css" /> -->
+<link rel="stylesheet" href="css/minimal-ui.css" />
 <!-- <link href="css/style.css" rel="stylesheet" type="text/css"> -->
 <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" type="text/css"> -->
+<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
 <script src="js/neighborhoods_mod.js"></script>
 <script src="https://unpkg.com/topojson@2"></script>
+<script src="js/d3-legend.js"></script>
+
 </head>
 <body>
 
+  <header>
+    <div class="container">
+      <div class="txt-center">
+        <h1 class="column12">Boston metro area affordability map</h1>
+        <div class="column6 prefix3">
+          <p>Text text text</p>
+          <p>THIS IS TEXT</p>
+          <!-- <img src="d3-legend.jpg"> -->
+        </div>
+        <nav class="column6 prefix3 nav nav-small">
+          <a href="#topmap">Census Map</a>
+          <a href="#scatter">Scatter Plot</a>
+          <a href="#bottommap">Permit Map</a>
+<!--           
+          <a href="#size">Size</a>
+          <a href="#symbol">Symbol</a>
+          <a href="#helpers">Helpers</a>
+          <a href="#summary">Summary of Functions</a> -->
+        </nav>
+      </div>
+    </div>
 
-<div class="container">
+  </header>
+
+
+<section class="container" id="topmap">
 <!-- <h2 class="nine columns">Boston metro area affordability map</h3> -->
-      <div id="map"><!-- Map container -->
+  <div id="map"><!-- Map container -->
         
-      <div class="row">
-        <h1 class="eleven columns">Boston metro area affordability map</h1>
+    <div class="row">
+        <h3 class="eleven columns">Census Data</h3>
         <br>
         <select id="select-key" class="three columns">
           <option value="median_income_2009">Median Income 2009</option>
           <option value="median_income_2014" selected="selected">Median Income 2014</option>
-          <option value="households_2009">Households 2009</option>
-          <option value="households_2014">Households 2014</option>
+          <option value="popDen_2009">Population Density 2009</option>
+          <option value="popDen_2014">Population Density 2014</option>
+          <option value="popDen_Change">Population Density Change</option>
           <option value="median_rent_2009">Median Rent 2009</option>
           <option value="median_rent_2014">Median Rent 2014</option>
+          <option value="median_rent_Change">Median Rent Change</option>
+          <option value="perc_Black_2009">Percent Black 2009</option>
+          <option value="perc_Black_2014">Percent Black 2014</option>
+          <option value="perc_Hispanic_2009">Percent Hispanic 2009</option>
+          <option value="perc_Hispanic_2014">Percent Hispanic 2014</option>
           <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
           <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
           <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
           <option value="perc_rentBurdened_2014">Percent Rent Burdened 2014</option>
           <option value="perc_unitsOwned_2009">Percent of Units Owned 2009 </option>
           <option value="perc_unitsOwned_2014">Percent of Units Owned 2014 </option>
-          <option value="median_rent_Change">Median Rent Change</option>
           <option value="median_inc_Change">Median Income Change</option>
           <option value="median_perc_rent_Change">Median % Rent Change</option>
           <option value="median_perc_inc_Change">Median % Income Change</option>
@@ -127,47 +173,64 @@
           <option value="perc_displaced">Percent Displaced</option>
           <option value="perc_arrival">Percent New Arrivals</option>
         </select>
-      </div>
+    </div>
 
-      </div>
-      <div id="legend"><!-- Legend container --></div>
-      <br>
-      <div id="details" class="hidden row"><!-- Details container --></div>
-      <div class="row">
-        <h4 class="nine columns">Census Block Comparisons</h3>
-        <br>
-        <div class="row">
-        <h5> X value: </h5>
-        <select id="select-key-x" class="three columns">
-          <option value="median_income_2009" selected="selected">Median Income 2009</option>
+  </div>
+  <div id="legend"><!-- Legend container --></div>
+  <br>
+  <div id="details" class="hidden row"><!-- Details container --></div>
+  </section>
+
+  <section class="container" id="scatter">
+  <div class="row">
+    <h3 class="nine columns">Census Block Comparisons</h3>
+  </div>
+  <div class="row">
+    <div class="grid txt-center">
+      <div class="column6">
+      <h5> X value: </h5>
+      <select id="select-key-x" class="three columns">
+          <option value="median_income_2009"  selected="selected">Median Income 2009</option>
           <option value="median_income_2014">Median Income 2014</option>
-          <option value="households_2009">Households 2009</option>
-          <option value="households_2014">Households 2014</option>
+          <option value="popDen_2009">Population Density 2009</option>
+          <option value="popDen_2014">Population Density 2014</option>
+          <option value="popDen_Change">Population Density Change</option>
           <option value="median_rent_2009">Median Rent 2009</option>
           <option value="median_rent_2014">Median Rent 2014</option>
+          <option value="perc_Black_2009">Percent Black 2009</option>
+          <option value="perc_Black_2014">Percent Black 2014</option>
+          <option value="perc_Hispanic_2009">Percent Hispanic 2009</option>
+          <option value="perc_Hispanic_2014">Percent Hispanic 2014</option>
+          <option value="median_rent_Change">Median Rent Change</option>
+
           <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
           <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
           <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
           <option value="perc_rentBurdened_2014">Percent Rent Burdened 2014</option>
           <option value="perc_unitsOwned_2009">Percent of Units Owned 2009 </option>
           <option value="perc_unitsOwned_2014">Percent of Units Owned 2014 </option>
-          <option value="median_rent_Change">Median Rent Change</option>
           <option value="median_inc_Change">Median Income Change</option>
+          <option value="median_perc_rent_Change">Median % Rent Change</option>
+          <option value="median_perc_inc_Change">Median % Income Change</option>
           <option value="perc_nonWhite_Change">Percent Non-White Change</option>
           <option value="perc_displaced">Percent Displaced</option>
           <option value="perc_arrival">Percent New Arrivals</option>
+          <option value="Count">Boston Data (see below)</option>
         </select>
-        </div>
-<!--         <br> -->
-        <div class="row">
-        <h5> Y value: </h5>
-        <select id="select-key-y" class="three columns">
+      </div>
+    <div class="column6">
+    <h5> Y value: </h5>
+    <select id="select-key-y" class="three columns">
           <option value="median_income_2009">Median Income 2009</option>
           <option value="median_income_2014" selected="selected">Median Income 2014</option>
           <option value="households_2009">Households 2009</option>
           <option value="households_2014">Households 2014</option>
           <option value="median_rent_2009">Median Rent 2009</option>
           <option value="median_rent_2014">Median Rent 2014</option>
+          <option value="perc_Black_2009">Percent Black 2009</option>
+          <option value="perc_Black_2014">Percent Black 2014</option>
+          <option value="perc_Hispanic_2009">Percent Hispanic 2009</option>
+          <option value="perc_Hispanic_2014">Percent Hispanic 2014</option>
           <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
           <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
           <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
@@ -179,27 +242,83 @@
           <option value="perc_nonWhite_Change">Percent Non-White Change</option>
           <option value="perc_displaced">Percent Displaced</option>
           <option value="perc_arrival">Percent New Arrivals</option>
-        </select>
-        </div>
-        <div id="chart"><!-- Chart container --></div>
-      </div>
-      
-      <footer id="footer">
-        <div class="inner">
-          <ul class="actions">
-            <li><span class="icon fa-envelope"></span> <a href="#">zneedell@gmail.com</a></li>
-          </ul>
-        </div>
-        <div class="copyright">
-          Design from <a href="https://templated.co">TEMPLATED</a>. Images <a href="https://unsplash.com">Style: Unsplash</a>.
-        </div>
-      </footer>
+          <option value="Count">Boston Data (see below)</option>
+    </select>
+  </div>
+  </div>
+  <div id="chart"><!-- Chart container --></div>
+</section>
 
-<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-<!-- <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script> -->
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-<script src="https://d3js.org/topojson.v2.min.js"></script>
-<!-- <script src="d3-tip.js"></script>
- --><script src="js/map.js"></script>
+  <section class="bg-light" id="firstdescription">
+    <div class="container">
+      <div class="column6 prefix3">
+        <h24Description</h4>
+          <div id="contents-md">
+            <p> Here is the explanation
+            </p>
+          </div>
+      </div>
+    </div>
+  </section>
+
+<section id="bottommap">
+<div class="container">
+<!-- <h2 class="nine columns">Boston metro area affordability map</h3> -->
+  <!-- <div id="map2"> -->
+    <div class="column12" prefix3>
+      <h3>Boston permits</h3>
+      <!-- <div class="grid txt-center"> -->
+    </div>
+      <div class="grid txt-center" id="selector">
+      <div class="column6">
+      <h4>Choose Data</h4>
+        <select id="select-key-time">
+          <option value="Pre2010">Pre-2010</option>
+          <option value="in2010">2010</option>
+          <option value="in2011">2011</option>
+          <option value="in2012">2012</option>
+          <option value="in2013">2013</option>
+          <option value="in2014">2014</option>
+          <option value="post2014"  selected="selected">Post 2014</option>
+        </select>
+      </div>
+      <!-- </div> -->
+      <div class="column6">
+      <h4>Choose Date Range</h4>
+        <select id="select-key-data">
+          <option value="Permits" selected="selected">Permits</option>
+          <option value="Code">Code Enforcement</option>
+          <option value="Crime">Crime</option>
+        </select>
+      </div>
+      <div id="map2" class="column8"> </div>
+      <div id="legendBoxBottom" class="column4"> <br></div>
+      </div>
+  </div>
+</section>
+      
+  <section class="bg-light" id="seconddescription">
+    <div class="container">
+      <div class="column6 prefix3">
+        <h24Description</h4>
+          <div id="contents-b">
+            <p> Here is the explanation
+            </p>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-dark" id="bottom">
+    <div class="inner">
+      <p>Contact: Zach Needell <a href="zneedell@mit.edu">zneedell@mit.edu</a></p>
+    </div>
+    <div class="copyright">
+          <p>Site design from <a href="http://www.susielu.com">Susie Lu</a></p>
+    </div>
+</section>
+
+ <script src="js/map.js"></script>
+ <script src="js/secondMap.js"></script>
 
 </body>

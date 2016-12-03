@@ -24,7 +24,7 @@ variance = function(x) {
 
 //A test for outliers http://en.wikipedia.org/wiki/Chauvenet%27s_criterion
 function chauvenet (x) {
-    var dMax = 3;
+    var dMax = 5;
     var mean = d3.mean(x);
     var stdv = Math.sqrt(variance(x));
     var counter = 0;
@@ -60,19 +60,26 @@ var y = d3.scaleLinear()
   .range([plotheight,margin.bottom])
   .domain([-1,1]);
 
+var colorBottom = d3.scaleQuantize()
+    .range(d3.schemeBlues[9])
+
 var r = d3.scaleSqrt()
   .range([0,7])
   .domain([0,10000]);
 
+
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
+    .attr("id","topmapsvg")
     .attr("height", height);
 
 var svg2 = d3.select("#chart").append("svg")
     .attr("width", plotwidth + margin.left + margin.right)
     .attr("height", plotheight + margin.top + margin.bottom)
     .attr("class", "chart")
+    .attr("id","scatterChart")
     .append("g")
+    .attr("id","scatterplotgroup")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
@@ -97,6 +104,7 @@ var maxvalue,
   minvalue,
   truemin,
   truemax;
+
 
 //var mapdata
 
@@ -135,6 +143,15 @@ function getMin(data, prop) {
       });
     };
 
+    d3.selection.prototype.moveToBack = function() {  
+        return this.each(function() { 
+            var firstChild = this.parentNode.firstChild; 
+            if (firstChild) { 
+                this.parentNode.insertBefore(this, firstChild); 
+            } 
+        });
+    };
+
 function getNiceExtent(data, prop) {
       var result = data.map(function(a) {return a.properties[prop];});
       return d3.extent(chauvenet(result))
@@ -156,8 +173,34 @@ var activeColorDomain;
   // d3.json("build/bgs.json", function(error, bgs) {
   function ready(error,tracts) {
     if (error) return console.error(error);
+    var mousebeingheld = false;
+    var neighborhoods = svgBottom.append( "g" ).attr( "id", "neighborhoods" );
+      neighborhoods.selectAll( "path" )
+      .data(topojson.feature(tracts, tracts.objects.tracts).features)
+      .enter()
+      .append( "path" )
+      .attr("class","bottomMapTract")
+      .style("stroke", "red")    // set the line colour
+      .style("fill", "none")
+        .attr( "d", path )
+        .attr("transform", function(d) {
+           return "translate(-100,-50)"})
+        .append("title")
+          .text(function(d) {
+            d.Count = 0;
+            return "Neighborhood: " +
+          d.properties.Name
+      })
+      // neighborhoods.transition()
+      //   .attr("transform", "translate(" +0+ "," + 0 + ")"
+      //   + "scale(" + 1.1 + ")"
+      //   + "translate(" + 0 + ",-100)")
+      ;
+
+      // updateFillColor(null)
 
     function onTractClick(elemData) {
+       console.log(elemData)
        var chosenTract = svg.selectAll("path")
           .filter(function(d) {return d.id == elemData.id})
         chosenTract.classed("selected", !chosenTract.classed("selected"))
@@ -183,9 +226,11 @@ var activeColorDomain;
     svg2.selectAll("#dots")
       .remove();
       var result = tracts.objects.tracts.geometries.map(function(a) {return a.properties[KeyX];});
-      x.domain(d3.extent(result))//.nice()
+      // x.domain(d3.extent(result))//.nice()
+      x.domain(getNiceExtent(tracts.objects.tracts.geometries,KeyX))//.nice()
       var result = tracts.objects.tracts.geometries.map(function(a) {return a.properties[KeyY];});
-      y.domain(d3.extent(result))//.nice()
+      // y.domain(d3.extent(result))//.nice()
+      y.domain(getNiceExtent(tracts.objects.tracts.geometries,KeyY))//.nice()
       xaxis.call(d3.axisBottom(x))
         // .attr("transform", "translate(0,350)")
       yaxis.call(d3.axisLeft(y))
@@ -197,13 +242,17 @@ var activeColorDomain;
       .append("circle")
       .attr("class","scatterplot")
       .classed("selected",false)
-      .filter(function(d){return d.properties[KeyX] > -1000 && d.properties[KeyX] !== null && d.properties[KeyY] !== null && d.properties[KeyY] > -1000})
+      .filter(function(d){return d.properties[KeyX] > -1000 && d.properties[KeyX] !== null && d.properties[KeyY] !== null && d.properties[KeyY] > -1000 && d.properties[KeyX] !== 0 && d.properties[KeyY] !== 0})
       .attr("r",function(d) {return r(d.properties.population_2014)})
       .attr("cx", function(d) {return x(d.properties[KeyX])})
       .attr("cy", function(d) {return y(d.properties[KeyY])})
       .attr("id", function(d) {
         return d.id})
       .on("click",onTractClick)
+      .on("mouseover", function(d){
+          if (mousebeingheld == true)
+            {onTractClick(d)}
+        })
       .style("fill",function(d) {return color(d.properties[KeyColor])})
        .append("title")
          .text(function(d) {return "coords: " + d.properties[KeyX] + ", " + d.properties[KeyY]})
@@ -244,7 +293,7 @@ var activeColorDomain;
         color.domain(getNiceExtent(tracts.objects.tracts.geometries,key))
         .range(d3.schemeBlues[9]);
       };
-      d3.select(".container")
+      d3.select("#legend")
         .selectAll("ul")
         .remove();
       var legend = d3.select('#legend')
@@ -260,14 +309,13 @@ var activeColorDomain;
             .text(function (d, i) {
              return legend_items[i];
               });
-      console.log([minvalue,maxvalue,truemin,truemax])
       return color
     }
 
     function updateMap(key) {
     clearTractStatus()
     updateColors(key)
-    console.log(topojson.feature(tracts, tracts.objects.tracts).features)
+    // console.log(topojson.feature(tracts, tracts.objects.tracts).features)
     d3.select("g")
       .selectAll("path")
       .remove();
@@ -290,26 +338,24 @@ var activeColorDomain;
           else {return color(+d.properties[currentKey] )};
         })
         .on("click", onTractClick)
+        // .on("mouseover", function(d){
+        //   if (mousebeingheld == true)
+        //     {onTractClick(d)}
+        // })
         .append("title")
         .text(function(d) { return "Value: " + d.properties[currentKey]  + ' ' + currentKey; })
-        .on("mouseover", function(d) {
-          div.transition()
-            .duration(200)
-            .style("opacity", .9);
-          div.html(
-            '<a href= "http://google.com">' + // The first <a> tag
-              'aaaaah' +
-                "</a>" +                          // closing </a> tag
-                "<br/>" + "bbbbb")     
-            .style("left", (d3.event.pageX) + "px")             
-            .style("top", (d3.event.pageY - 28) + "px");
-       });
-    // console.log(towns.features[1].geometry)
-    // g.append("path")
-    //   .datum(topojson.mesh(counties))
-    //   // .data(topojson.mesh(towns.features[1].geometry))
-    //   .attr("class", "town")
-      // .attr( "d", path );
+       //  .on("mouseover", function(d) {
+       //    div.transition()
+       //      .duration(200)
+       //      .style("opacity", .9);
+       //    div.html(
+       //      '<a href= "http://google.com">' + // The first <a> tag
+       //        'aaaaah' +
+       //          "</a>" +                          // closing </a> tag
+       //          "<br/>" + "bbbbb")     
+       //      .style("left", (d3.event.pageX) + "px")             
+       //      .style("top", (d3.event.pageY - 28) + "px");
+       // });
   ;}
 
   d3.select('#select-key').on('change', function(a) {
@@ -328,9 +374,30 @@ var activeColorDomain;
     currentKeyY = d3.select(this).property('value');
     updateScatter(currentKeyX,currentKeyY,currentKey);
     })
+
+  d3.select("#scatterChart")
+    .each(function(d) {
+      console.log("loaded something")
+      console.log(d)})
+     .on("mousedown",function(a){
+      mousebeingheld = !mousebeingheld;
+      return mousebeingheld})
+     .on("mouseup",function(a){
+      mousebeingheld = false;
+      return mousebeingheld})
+  d3.select("#topmapsvg")
+    .each(function(d) {
+      console.log("loaded something")
+      console.log(d)})
+     .on("mousedown",function(a){
+      mousebeingheld = !mousebeingheld;
+      return mousebeingheld})
+     .on("mouseup",function(a){
+      mousebeingheld = false;
+      return mousebeingheld})
 updateMap(currentKey);
-  updateScatter(currentKeyX,currentKeyY,currentKey);
-  
+updateScatter(currentKeyX,currentKeyY,currentKey);
+updateData(dataKey,timeKey)
   // updateXaxis(currentKeyX);
   // updateYaxis(currentKeyY);
   console.log("first map update")
@@ -402,8 +469,8 @@ neighborhoods_cambridge.selectAll( "path" )
     return "Neighborhood: " +
       d.properties.NAME
      });
-console.log(neighborhoods_boston_json)
-console.log(neighborhoods_cambridge_json)
+// console.log(neighborhoods_boston_json)
+// console.log(neighborhoods_cambridge_json)
 
 
 
