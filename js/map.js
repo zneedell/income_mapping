@@ -184,7 +184,7 @@ var activeColorDomain;
       .style("fill", "none")
         .attr( "d", path )
         .attr("transform", function(d) {
-           return "translate(-100,-50)"})
+           return "translate(-100,-50)translate(-50,-50)"})
         .append("title")
           .text(function(d) {
             d.Count = 0;
@@ -302,7 +302,7 @@ var activeColorDomain;
          var keys = legend.selectAll('li.key')
           .data(color.range());
           var legend_items = [d3.format(",.2r")(activeColorDomain[0]), "", "", "", "", "", "", "", d3.format(",.2r")(activeColorDomain[1])];
-          console.log(activeColorDomain)
+          // console.log(activeColorDomain)
           keys.enter().append('li')
             .attr('class', 'key')
             .style('border-top-color', String)
@@ -377,8 +377,7 @@ var activeColorDomain;
 
   d3.select("#scatterChart")
     .each(function(d) {
-      console.log("loaded something")
-      console.log(d)})
+      console.log("loaded something")})
      .on("mousedown",function(a){
       mousebeingheld = !mousebeingheld;
       return mousebeingheld})
@@ -387,8 +386,7 @@ var activeColorDomain;
       return mousebeingheld})
   d3.select("#topmapsvg")
     .each(function(d) {
-      console.log("loaded something")
-      console.log(d)})
+      console.log("loaded something")})
      .on("mousedown",function(a){
       mousebeingheld = !mousebeingheld;
       return mousebeingheld})

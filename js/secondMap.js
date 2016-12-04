@@ -292,7 +292,7 @@ d3.json(APIstring,function(error, permitData) {
       projectionTransform[0] = projectionTransform[0] - 100
       projectionTransform[1] = projectionTransform[1] - 50
       // console.log(projectionTransform)
-    return "translate(" + projectionTransform+ ")"})
+    return "translate(" + projectionTransform+ ")translate(-50,-50)"})
     // .attr("transform", function(d) {
     //   return "translate(0,-100)"})
     .append("title")
@@ -386,7 +386,9 @@ function updateFillColor(matchMe) {
      svgBottom.selectAll("path")
         .style("fill",function(d) {return colorBottom(d.properties.Count)})
         .style("opacity",0.3)
-        // .moveToBack();
+        .moveToBack();
+    allpermits.selectAll("circle")
+      .moveToFront();
 
 }
 
