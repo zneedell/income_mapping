@@ -68,6 +68,10 @@
   shape-rendering: crispEdges;
 }
 
+.legendBG {
+    background-color: white;
+}
+
 #tracts .active {
   fill: green;
   stroke-width: 2;
@@ -276,10 +280,13 @@
   <section class="bg-light" id="firstdescription">
     <div class="container">
       <div class="column6 prefix3">
-        <h24Description</h4>
+        <h4>Instructions</h4>
           <div id="contents-md">
-            <p> Here is the explanation
-            </p>
+            <ul>
+            <li> The top drop-down menu controls the color scale of the census tracts on the map and scatter plot.
+            <li> Each dot on the scatter plot corresponds to a census tract, dot area is proportional to population.
+            <li> Clicking on a census tract on the map highlights the corresponding dot on the scatter plot, and vice versa.
+            </ul>
           </div>
       </div>
     </div>
@@ -295,7 +302,7 @@
     </div>
       <div class="grid txt-center" id="selector">
       <div class="column6">
-      <h4>Choose Data</h4>
+      <h4>Choose Date Range</h4>
         <select id="select-key-time">
           <option value="Pre2010">Pre-2010</option>
           <option value="in2010">2010</option>
@@ -308,7 +315,7 @@
       </div>
       <!-- </div> -->
       <div class="column6">
-      <h4>Choose Date Range</h4>
+      <h4>Choose Data</h4>
         <select id="select-key-data">
           <option value="Permits" selected="selected">Permits</option>
           <option value="Code">Code Enforcement</option>
@@ -324,10 +331,14 @@
   <section class="bg-light" id="seconddescription">
     <div class="container">
       <div class="column6 prefix3">
-        <h24Description</h4>
-          <div id="contents-b">
-            <p> Here is the explanation
-            </p>
+        <h4>Instructions</h4>
+          <div id="contents-md">
+            <ul>
+            <li> This map gets its data from <a href="https://data.cityofboston.gov">Data Boston</a>, which sometimes takes a while to load. </li>
+            <li> Change the data source range of dates displayed via the dropdown menus (not all dates are available for all types of data). </li>
+            <li> A filter can be set to different types of records by clicking on the legend entry.
+            <li> The density (per household) of the number of records observed in each census tract can be used as an axis on the above scatter plot by selecting the "Boston Data" option. </li>
+            </ul>
           </div>
       </div>
     </div>

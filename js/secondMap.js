@@ -272,7 +272,7 @@ d3.json(APIstring,function(error, permitData) {
     //   return nhood
     // })
     .attr("class", function(d){return classifyPoint(d,dataKey)})
-    .attr("r", 1.5)
+    .attr("r", 2)
     .style("stroke","black")
     .style("stroke-width",0)
     .on("mouseover", function()
@@ -280,7 +280,7 @@ d3.json(APIstring,function(error, permitData) {
       else {d3.select(this).style("fill","black")};
     })
     .on("mouseout", function()
-      {if (selectedType == null) {d3.select(this).attr("r",1.5)}
+      {if (selectedType == null) {d3.select(this).attr("r",2)}
       else {d3.select(this).style("fill",function(d){return colorDots(classifyPoint(d,dataKey))})};
     })
     .style("fill",function(d){return colorDots(classifyPoint(d,dataKey))})
@@ -305,6 +305,7 @@ d3.json(APIstring,function(error, permitData) {
 d3.select("#legendBoxBottom")
   .append("svg")
   .attr("height", height/2)
+  .attr("class", "legendBG")
   .append("g")
   .attr("class","legendOrdinal")
   .attr("id", "bottomLegend")
@@ -354,7 +355,7 @@ function onMouseOut(elemData) {
   .filter( function(d) { return classifyPoint(d,dataKey) == elemData;})
   .style("stroke-width",0)
   .style("opacity",1)
-  .attr("r", 1.5)
+  .attr("r", 2)
   svgBottom.selectAll("circle")
   .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
   .style("opacity",1)}
@@ -383,10 +384,10 @@ function updateFillColor(matchMe) {
         {countrange.push(d.properties.Count)}
       })
       colorBottom.domain(d3.extent(countrange))
-     svgBottom.selectAll("path")
-        .style("fill",function(d) {return colorBottom(d.properties.Count)})
-        .style("opacity",0.4)
-        .moveToBack();
+     // svgBottom.selectAll("path")
+     //    .style("fill",function(d) {return colorBottom(d.properties.Count)})
+     //    .style("opacity",0.4)
+     //    .moveToBack();
     allpermits.selectAll("circle")
       .moveToFront();
 
@@ -411,7 +412,7 @@ function onClick(elemData) {
     svgBottom.selectAll("circle")
     .style("stroke-width",0)
     .style("visibility","visible")
-    .attr("r", 1.5)
+    .attr("r", 2)
     .style("opacity",1)
     d3.select(this).style("stroke-width",0)
     updateFillColor(null)
@@ -423,12 +424,12 @@ function onClick(elemData) {
     .filter( function(d) { return classifyPoint(d,dataKey) == elemData;})
     .style("stroke-width",2)
     .style("visibility","visible")
-    .style("opacity",0.3)
+    .style("opacity",0.4)
     .attr("r", 5)
     svgBottom.selectAll("circle")
     .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
     .style("visibility","hidden")
-    .attr("r", 1.5)
+    .attr("r", 2)
     .style("stroke-width",0)
     d3.select(this).style("stroke-width",3)
     updateFillColor(elemData)
@@ -440,19 +441,19 @@ function onClick(elemData) {
     svgBottom.selectAll("circle")
     .style("stroke-width",0)
     .style("visibility","visible")
-    .attr("r", 1.5)
+    .attr("r", 2)
     .style("opacity",1)
     svgBottom.selectAll("circle")
     .filter( function(d) { return classifyPoint(d,dataKey) == elemData;})
     .style("stroke-width",2)
     .style("visibility","visible")
-    .style("opacity",0.3)
+    .style("opacity",0.4)
     .attr("r", 5)
     svgBottom.selectAll("circle")
     .filter( function(d) { return classifyPoint(d,dataKey) != elemData;})
     .style("visibility","hidden")
     .style("opacity",1)
-    .attr("r", 1.5)
+    .attr("r", 2)
     .style("stroke-width",0)
     d3.selectAll("rect").style("stroke-width",0)
     d3.select(this).style("stroke-width",3)
