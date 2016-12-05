@@ -118,10 +118,10 @@
   <header>
     <div class="container">
       <div class="txt-center">
-        <h1 class="column12">Boston metro area affordability map</h1>
+        <h1 class="column12">Boston area displacement and demographic change</h1>
         <div class="column6 prefix3">
-          <p>Text text text</p>
-          <p>THIS IS TEXT</p>
+<!--           <p>Text text text</p>
+          <p>THIS IS TEXT</p> -->
           <!-- <img src="d3-legend.jpg"> -->
         </div>
         <nav class="column6 prefix3 nav nav-small">
@@ -150,28 +150,35 @@
         <select id="select-key" class="three columns">
           <option value="median_income_2009">Median Income 2009</option>
           <option value="median_income_2014" selected="selected">Median Income 2014</option>
-          <option value="popDen_2009">Population Density 2009</option>
+          <option value="median_inc_Change">Median Income Change</option>
+          <option value="median_perc_inc_Change">Median % Income Change</option>
+          <option value="popDen_2009">Population Density 2009 (/mi^2)</option>
           <option value="popDen_2014">Population Density 2014</option>
           <option value="popDen_Change">Population Density Change</option>
           <option value="median_rent_2009">Median Rent 2009</option>
           <option value="median_rent_2014">Median Rent 2014</option>
           <option value="median_rent_Change">Median Rent Change</option>
+          <option value="median_perc_rent_Change">Median % Rent Change</option>
           <option value="perc_Black_2009">Percent Black 2009</option>
           <option value="perc_Black_2014">Percent Black 2014</option>
           <option value="perc_Hispanic_2009">Percent Hispanic 2009</option>
           <option value="perc_Hispanic_2014">Percent Hispanic 2014</option>
           <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
           <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
+          <option value="perc_nonWhite_Change">Percent Non-White Change</option>
           <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
           <option value="perc_rentBurdened_2014">Percent Rent Burdened 2014</option>
+          <option value="perc_rentBurdened_Change">Percent Rent Burdened Change</option>
           <option value="perc_unitsOwned_2009">Percent of Units Owned 2009 </option>
           <option value="perc_unitsOwned_2014">Percent of Units Owned 2014 </option>
-          <option value="median_inc_Change">Median Income Change</option>
-          <option value="median_perc_rent_Change">Median % Rent Change</option>
-          <option value="median_perc_inc_Change">Median % Income Change</option>
-          <option value="perc_nonWhite_Change">Percent Non-White Change</option>
           <option value="perc_displaced">Percent Displaced</option>
+          <option value="perc_displacedOwn">Percent Homowners Displaced</option>
+          <option value="perc_displacedRent">Percent Renters Displaced</option>
           <option value="perc_arrival">Percent New Arrivals</option>
+          <option value="perc_arrivalOwn">Percent Homowners New Arrivals</option>
+          <option value="perc_arrivalRent">Percent Renters New Arrivals</option>
+          <option value="density_arrival">Density of New Arrivals (/mi^2)</option>
+          <option value="density_displaced">Density of Displacements</option>
         </select>
     </div>
 
@@ -190,59 +197,76 @@
       <div class="column6">
       <h5> X value: </h5>
       <select id="select-key-x" class="three columns">
-          <option value="median_income_2009"  selected="selected">Median Income 2009</option>
+          <option value="Count">Boston Data (see below)</option>
+          <option value="median_income_2009" selected="selected">Median Income 2009</option>
           <option value="median_income_2014">Median Income 2014</option>
-          <option value="popDen_2009">Population Density 2009</option>
+          <option value="median_inc_Change">Median Income Change</option>
+          <option value="median_perc_inc_Change">Median % Income Change</option>
+          <option value="popDen_2009">Population Density 2009 (/mi^2)</option>
           <option value="popDen_2014">Population Density 2014</option>
           <option value="popDen_Change">Population Density Change</option>
           <option value="median_rent_2009">Median Rent 2009</option>
           <option value="median_rent_2014">Median Rent 2014</option>
+          <option value="median_rent_Change">Median Rent Change</option>
+          <option value="median_perc_rent_Change">Median % Rent Change</option>
           <option value="perc_Black_2009">Percent Black 2009</option>
           <option value="perc_Black_2014">Percent Black 2014</option>
           <option value="perc_Hispanic_2009">Percent Hispanic 2009</option>
           <option value="perc_Hispanic_2014">Percent Hispanic 2014</option>
-          <option value="median_rent_Change">Median Rent Change</option>
-
           <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
           <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
+          <option value="perc_nonWhite_Change">Percent Non-White Change</option>
           <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
           <option value="perc_rentBurdened_2014">Percent Rent Burdened 2014</option>
+          <option value="perc_rentBurdened_Change">Percent Rent Burdened Change</option>
           <option value="perc_unitsOwned_2009">Percent of Units Owned 2009 </option>
           <option value="perc_unitsOwned_2014">Percent of Units Owned 2014 </option>
-          <option value="median_inc_Change">Median Income Change</option>
-          <option value="median_perc_rent_Change">Median % Rent Change</option>
-          <option value="median_perc_inc_Change">Median % Income Change</option>
-          <option value="perc_nonWhite_Change">Percent Non-White Change</option>
           <option value="perc_displaced">Percent Displaced</option>
+          <option value="perc_displacedOwn">Percent Homowners Displaced</option>
+          <option value="perc_displacedRent">Percent Renters Displaced</option>
           <option value="perc_arrival">Percent New Arrivals</option>
-          <option value="Count">Boston Data (see below)</option>
+          <option value="perc_arrivalOwn">Percent Homowners New Arrivals</option>
+          <option value="perc_arrivalRent">Percent Renters New Arrivals</option>
+          <option value="density_arrival">Density of New Arrivals (/mi^2)</option>
+          <option value="density_displaced">Density of Displacements</option>
+          
         </select>
       </div>
     <div class="column6">
     <h5> Y value: </h5>
     <select id="select-key-y" class="three columns">
+          <option value="Count" selected="selected">Boston Data (see below)</option>
           <option value="median_income_2009">Median Income 2009</option>
           <option value="median_income_2014" selected="selected">Median Income 2014</option>
-          <option value="households_2009">Households 2009</option>
-          <option value="households_2014">Households 2014</option>
+          <option value="median_inc_Change">Median Income Change</option>
+          <option value="median_perc_inc_Change">Median % Income Change</option>
+          <option value="popDen_2009">Population Density 2009 (/mi^2)</option>
+          <option value="popDen_2014">Population Density 2014</option>
+          <option value="popDen_Change">Population Density Change</option>
           <option value="median_rent_2009">Median Rent 2009</option>
           <option value="median_rent_2014">Median Rent 2014</option>
+          <option value="median_rent_Change">Median Rent Change</option>
+          <option value="median_perc_rent_Change">Median % Rent Change</option>
           <option value="perc_Black_2009">Percent Black 2009</option>
           <option value="perc_Black_2014">Percent Black 2014</option>
           <option value="perc_Hispanic_2009">Percent Hispanic 2009</option>
           <option value="perc_Hispanic_2014">Percent Hispanic 2014</option>
           <option value="perc_nonWhite_2009">Percent Non-White 2009</option>
           <option value="perc_nonWhite_2014">Percent Non-White 2014</option>
+          <option value="perc_nonWhite_Change">Percent Non-White Change</option>
           <option value="perc_rentBurdened_2009">Percent Rent Burdened 2009</option>
           <option value="perc_rentBurdened_2014">Percent Rent Burdened 2014</option>
+          <option value="perc_rentBurdened_Change">Percent Rent Burdened Change</option>
           <option value="perc_unitsOwned_2009">Percent of Units Owned 2009 </option>
           <option value="perc_unitsOwned_2014">Percent of Units Owned 2014 </option>
-          <option value="median_rent_Change">Median Rent Change</option>
-          <option value="median_inc_Change">Median Income Change</option>
-          <option value="perc_nonWhite_Change">Percent Non-White Change</option>
           <option value="perc_displaced">Percent Displaced</option>
+          <option value="perc_displacedOwn">Percent Homowners Displaced</option>
+          <option value="perc_displacedRent">Percent Renters Displaced</option>
           <option value="perc_arrival">Percent New Arrivals</option>
-          <option value="Count">Boston Data (see below)</option>
+          <option value="perc_arrivalOwn">Percent Homowners New Arrivals</option>
+          <option value="perc_arrivalRent">Percent Renters New Arrivals</option>
+          <option value="density_arrival">Density of New Arrivals (/mi^2)</option>
+          <option value="density_displaced">Density of Displacements</option>
     </select>
   </div>
   </div>
@@ -311,10 +335,11 @@
 
   <section class="bg-dark" id="bottom">
     <div class="inner">
-      <p>Contact: Zach Needell <a href="zneedell@mit.edu">zneedell@mit.edu</a></p>
+      <p>Contact: Zach Needell <a href="mailto:zneedell@mit.edu">zneedell@mit.edu</a></p>
     </div>
     <div class="copyright">
           <p>Site design from <a href="http://www.susielu.com">Susie Lu</a></p>
+          <p>Much of this code is based on the <a href="http://data-map-d3.readthedocs.io/en/latest/">Data-map-d3</a> tutorial by Lukas Vonlanthen, the <a href="https://bost.ocks.org/mike/bubble-map/">Bubble map</a> tutorial by Mike Bostock, and the <a href="https://maptimeboston.github.io/d3-maptime/#/">Mapping with d3</a> tutorial by Andy Woodruff.</p> 
     </div>
 </section>
 

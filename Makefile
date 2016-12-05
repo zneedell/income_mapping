@@ -107,12 +107,13 @@ build/tract2.json: build/tl_2015_25_tract.shp build/aff/ACS_Map_Data.csv
 		--properties='perc_nonWhite_Change=+d.properties["Perc_NonWhite_Change"]' \
 		--properties='perc_rentBurdened_2009=+d.properties["Perc_RentBurdened_2009"]' \
 		--properties='perc_rentBurdened_2014=+d.properties["Perc_RentBurdened_2014"]' \
+		--properties='perc_rentBurdened_Change=+d.properties["Perc_RentBurdened_Change"]' \
 		--properties='median_income_2009=+d.properties["IncMedian_2009"]' \
 		--properties='median_income_2014=+d.properties["IncMedian_2014"]' \
 		--properties='median_rent_2009=+d.properties["MedianRent_2009"]' \
 		--properties='median_rent_2014=+d.properties["MedianRent_2014"]' \
 		--properties='perc_unitsOwned_2009=+d.properties["Perc_UnitsOwned_2009"]' \
-		--properties='perc_unitsOwned_2014=+d.properties["Perc_UnitsOwned_2009"]' \
+		--properties='perc_unitsOwned_2014=+d.properties["Perc_UnitsOwned_2014"]' \
 		--properties='median_rent_Change=+d.properties["RentMedianAbsChange"]' \
 		--properties='median_perc_rent_Change=+d.properties["RentMedianPercChange"]' \
 		--properties='median_inc_Change=+d.properties["IncMedianAbsChange"]' \
@@ -121,6 +122,12 @@ build/tract2.json: build/tl_2015_25_tract.shp build/aff/ACS_Map_Data.csv
 		--properties='arrival=+d.properties["NewArrival_2014"]' \
 		--properties='perc_displaced=+d.properties["Perc_Displaced"]' \
 		--properties='perc_arrival=+d.properties["Perc_NewArrival"]' \
+		--properties='perc_displacedRent=+d.properties["Perc_RenterDisplaced"]' \
+		--properties='perc_arrivalRent=+d.properties["Perc_RenterNewArrival"]' \
+		--properties='perc_displacedOwn=+d.properties["Perc_OwnerDisplaced"]' \
+		--properties='perc_arrivalOwn=+d.properties["Perc_RenterNewArrival"]' \
+		--properties='density_arrival=+d.properties["NewArrival_Density_2014"]' \
+		--properties='density_displaced=+d.properties["Displaced_Density_2014"]' \
 		--projection='width = 960, height = 600, d3.geo.albers() \
   			.scale( 170000 ) \
   			.rotate( [71.13,0] ) \

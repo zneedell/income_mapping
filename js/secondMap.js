@@ -385,7 +385,7 @@ function updateFillColor(matchMe) {
       colorBottom.domain(d3.extent(countrange))
      svgBottom.selectAll("path")
         .style("fill",function(d) {return colorBottom(d.properties.Count)})
-        .style("opacity",0.3)
+        .style("opacity",0.4)
         .moveToBack();
     allpermits.selectAll("circle")
       .moveToFront();

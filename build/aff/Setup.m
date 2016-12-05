@@ -61,6 +61,7 @@ nRentBurdened_2014 = GeoData_Joined.RenterHouseholds_Count_2014 - ...
     (GeoData_Joined.RentIncPer_LT_10_2014 + GeoData_Joined.RentIncPer_10_15_2014 + ...
     GeoData_Joined.RentIncPer_15_20_2014 + GeoData_Joined.RentIncPer_20_25_2014 + GeoData_Joined.RentIncPer_25_30_2014);
 mapVars.Perc_RentBurdened_2014 = nRentBurdened_2014./GeoData_Joined.RenterHouseholds_Count_2014;
+mapVars.Perc_RentBurdened_Change = mapVars.Perc_RentBurdened_2014 - mapVars.Perc_RentBurdened_2009;
 
 mapVars.HousingUnits_2009 = GeoData_Joined.HousingUnits_2009;
 mapVars.OwnedUnits_2009 = GeoData_Joined.Owner_2009;
@@ -83,6 +84,8 @@ mapVars.NewArrival_Density_2014 = mapVars.NewArrival_2014./mapVars.areaLand;
 
 mapVars.Perc_OwnerDisplaced = mapVars.DisplacedOwner_2014./GeoData_Joined.Owner_2009;
 mapVars.Perc_RenterDisplaced = mapVars.DisplacedRenter_2014./GeoData_Joined.Renter_2009;
+mapVars.Perc_OwnerNewArrival = mapVars.NewArrivalOwner_2014./GeoData_Joined.Owner_2014;
+mapVars.Perc_RenterNewArrival = mapVars.NewArrivalRenter_2014./GeoData_Joined.Renter_2014;
 mapVars.Perc_Displaced = mapVars.Displaced_2014./GeoData_Joined.HousingUnits_2009;
 mapVars.Perc_NewArrival = mapVars.NewArrival_2014./mapVars.HousingUnits_2014;
 
@@ -93,9 +96,11 @@ mapVars.RentMedianPercChange = (mapVars.MedianRent_2014 - mapVars.MedianRent_200
 
 mapVars.Pop_NonWhite_Change = mapVars.Pop_NonWhite_2014 - mapVars.Pop_NonWhite_2009;
 mapVars.Perc_NonWhite_Change = mapVars.Perc_NonWhite_2014 - mapVars.Perc_NonWhite_2009;
-mapVars.Perc_Displaced(mapVars.Perc_Displaced < -0.2) = nan;
+mapVars.Perc_Displaced(mapVars.Perc_Displaced < 0) = 0;
 mapVars.Perc_NonWhite_Change(mapVars.Perc_NonWhite_Change < -0.5) = nan;
 mapVars.PopDen_Change(mapVars.PopDen_Change < -1e4) = nan;
+mapVars.Perc_OwnerDisplaced(mapVars.Perc_OwnerDisplaced < 0) = 0;
+mapVars.Perc_RenterDisplaced(mapVars.Perc_RenterDisplaced < 0) = 0;
 
 writetable(mapVars,'ACS_Map_Data.csv');
 %%
@@ -104,3 +109,11 @@ mdl = fitlm(mapVars,'Perc_Displaced~Perc_NonWhite_2009^2+Perc_NonWhite_2009:IncM
 %%
 mdl2 = fitlm(mapVars,'Perc_Displaced~Perc_NonWhite_2009^2+Perc_UnitsOwned_2009+ MedianRent_2009 + PopDen_2009*Perc_NonWhite_2009' ...
     ,'Weights',mapVars.HousingUnits_2009)
+
+%%
+mdl2 = fitlm(mapVars,'Perc_Displaced~1+Perc_NonWhite_Change + Perc_Black_2009+Perc_Hispanic_2009 + MedianRent_2009 + Perc_UnitsOwned_2009 + PopDen_2009' ...
+,'Weights',mapVars.HousingUnits_2009)
+
+%%
+mdl2 = fitlm(mapVars,'Perc_NonWhite_Change~1 +PopDen_Change+ IncMedianPercChange+RentMedianPercChange + Perc_UnitsOwned_2009 + Perc_RentBurdened_2009 + MedianRent_2009 + IncMedian_2009+ PopDen_2009' ...
+,'Weights',mapVars.HousingUnits_2009)
