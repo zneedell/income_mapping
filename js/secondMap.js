@@ -248,7 +248,7 @@ d3.select("#legendBoxBottom")
 APIstring = updateAPIstring(dataKey,timeKey);
 pointClass = getClass(dataKey);
 pointDescription = getDescription(dataKey);
-var colorDots = d3.scaleOrdinal(d3.schemeCategory10);
+var colorDots = d3.scaleOrdinal(d3.schemeCategory20);
 d3.json(APIstring,function(error, permitData) {
   if (error) return console.warn(error);
 

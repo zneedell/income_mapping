@@ -266,14 +266,14 @@ var activeColorDomain;
         .attr("x", -250)
         // .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text(function(d) {return KeyY});
+        .text(function(d) {return KeyY.replace(/_/g , " ")});
     svg2.append("text")
         .attr("class","axlabel")
-        .attr("y", 550)
+        .attr("y", 560)
         .attr("x", 400)
         // .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text(function(d) {return KeyX});
+        .text(function(d) {return KeyX.replace(/_/g , " ")});
       }
 
     var color = d3.scaleQuantize()
