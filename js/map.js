@@ -1,5 +1,6 @@
 
-var width = 960,
+var width = 900,
+  projwidth = 960,
     height = 600,
     centered;
 
@@ -48,7 +49,7 @@ var albersProjection = d3.geoAlbers()
   .scale( 170000 )
   .rotate( [71.13,0]  )
   .center( [0, 42.35]  )
-  .translate( [width/2,height/2] );
+  .translate( [projwidth/2,height/2] );
 var geoPath = d3.geoPath()
     .projection( albersProjection );
 
