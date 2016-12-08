@@ -125,7 +125,7 @@ build/tract2.json: build/tl_2015_25_tract.shp build/aff/ACS_Map_Data.csv
 		--properties='perc_displacedRent=+d.properties["Perc_RenterDisplaced"]' \
 		--properties='perc_arrivalRent=+d.properties["Perc_RenterNewArrival"]' \
 		--properties='perc_displacedOwn=+d.properties["Perc_OwnerDisplaced"]' \
-		--properties='perc_arrivalOwn=+d.properties["Perc_RenterNewArrival"]' \
+		--properties='perc_arrivalOwn=+d.properties["Perc_OwnerNewArrival"]' \
 		--properties='density_arrival=+d.properties["NewArrival_Density_2014"]' \
 		--properties='density_displaced=+d.properties["Displaced_Density_2014"]' \
 		--projection='width = 960, height = 600, d3.geo.albers() \
