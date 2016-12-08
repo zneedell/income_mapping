@@ -25,7 +25,7 @@ variance = function(x) {
 
 //A test for outliers http://en.wikipedia.org/wiki/Chauvenet%27s_criterion
 function chauvenet (x) {
-    var dMax = 5;
+    var dMax = 10;
     var mean = d3.mean(x);
     var stdv = Math.sqrt(variance(x));
     var counter = 0;
@@ -155,12 +155,12 @@ function getMin(data, prop) {
 
 function getNiceExtent(data, prop) {
       var result = data.map(function(a) {return a.properties[prop];});
-      return d3.extent((result))
+      return d3.extent(chauvenet(result))
 }
 
 function getNiceSymmetricalExtent(data, prop) {
       var result = data.map(function(a) {return a.properties[prop];});
-      var trueExtent = d3.extent((result))
+      var trueExtent = d3.extent(chauvenet(result))
       return [d3.min([trueExtent[0],-trueExtent[1]]), d3.max([-trueExtent[0],trueExtent[1]])];
 }
 
