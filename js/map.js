@@ -155,12 +155,12 @@ function getMin(data, prop) {
 
 function getNiceExtent(data, prop) {
       var result = data.map(function(a) {return a.properties[prop];});
-      return d3.extent(chauvenet(result))
+      return d3.extent((result))
 }
 
 function getNiceSymmetricalExtent(data, prop) {
       var result = data.map(function(a) {return a.properties[prop];});
-      var trueExtent = d3.extent(chauvenet(result))
+      var trueExtent = d3.extent((result))
       return [d3.min([trueExtent[0],-trueExtent[1]]), d3.max([-trueExtent[0],trueExtent[1]])];
 }
 
