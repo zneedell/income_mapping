@@ -97,7 +97,7 @@ var yaxis = svg2.append("g")
 
 var g = svg.append("g");
 
-var currentKey = "households_2009";
+var currentKey = "median_inc_Change";
 var currentKeyX = "median_income_2009";
 var currentKeyY = "median_income_2014";
 
