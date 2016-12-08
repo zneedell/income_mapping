@@ -25,7 +25,7 @@ variance = function(x) {
 
 //A test for outliers http://en.wikipedia.org/wiki/Chauvenet%27s_criterion
 function chauvenet (x) {
-    var dMax = 10;
+    var dMax = 7;
     var mean = d3.mean(x);
     var stdv = Math.sqrt(variance(x));
     var counter = 0;
